@@ -1,0 +1,15 @@
+{
+    "status": "jogja known places ",
+    "data": [
+        {
+            "name": "univ amikom",
+            "lat": -775.965,
+            "lng": 110.409153
+        },
+        {
+            "name": "univ gm",
+            "lat": -7.770102,
+            "lng": 110.377309
+        }
+    ]
+}
