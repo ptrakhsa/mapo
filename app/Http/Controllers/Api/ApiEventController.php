@@ -136,7 +136,7 @@ class ApiEventController extends Controller
         // $yogyaJson = json_decode($yogyaStr, true);
         // return response()->json($yogyaJson);
 
-        $res = DB::select("select name, st_asgeojson(polygon_area) as polygon from boundaries");
+        $res = DB::select("SELECT name, ST_ASGEOJSON(polygon_area) AS polygon FROM place_boundaries");
 
         return response()->json([
             "type" => "FeatureCollection",

@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('boundaries', function (Blueprint $table) {
+        Schema::create('place_boundaries', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
             $table->polygon('polygon_area');
-            $table->timestamps();
+            // $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('boundaries');
+        Schema::dropIfExists('place_boundaries');
     }
 };
