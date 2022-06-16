@@ -33,6 +33,10 @@ Route::get('/', function () {
     return view('ui');
 });
 
+Route::get('/fix-grouping', function () {
+    return view('fix-grouping');
+});
+
 Route::get('/jogja', function () {
     return view('jogja');
 });

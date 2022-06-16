@@ -118,6 +118,97 @@ class ApiEventController extends Controller
         ]);
     }
 
+    public function findEvents(Request $request)
+    {
+        // URL query 
+        $lat = $request->query("lat");
+        $lng = $request->query("lng");
+        $keyword = $request->query("keyword");
+        $cat = $request->query("cat"); // to filter events by category id EXPECTED VALUES (number) [1,2,3 .. ]
+        $date = $request->query("date"); // to filter events by date EXPECTED VALUES (string) [week, month, year]
+
+        // base location (Tugu Jogja)
+        $lat_val = $lat ?? -7.782916432596278;
+        $lng_val = $lng ?? 110.36705274134874;
+        $user_location = "ST_GeomFromText('POINT($lng_val $lat_val)', 4326)";
+
+        // this query to get nearby events with user location
+        $events = DB::table('events')
+            ->join("categories", "categories.id", "=", "events.category_id")
+            ->whereExists(function ($query) {
+                $query->select('*')
+                    ->from('submitted_events')
+                    ->joinSub(
+                        DB::table('submitted_events')
+                            ->selectRaw('MAX(submitted_events.id) AS id_aggregate, submitted_events.event_id')
+                            ->groupBy('submitted_events.event_id'),
+                        'latestOfMany',
+                        function ($join) {
+                            $join->on("latestOfMany.id_aggregate", "=", "submitted_events.id")
+                                ->on("latestOfMany.event_id", "=", "submitted_events.event_id");
+                        }
+                    );
+            })
+            ->selectRaw(
+                "events.location, 
+                ST_DISTANCE_SPHERE(`position`,$user_location) AS distance, 
+                Y(position) AS lat, X(position) AS lng, 
+                ST_ASGEOJSON(position) as geometry, 
+                GROUP_CONCAT(
+                    JSON_OBJECT(
+                              'id', events.id
+                            , 'name', events.name
+                            , 'start_date', DATE_FORMAT(events.start_date, '%e %b, %I:%i')
+                            , 'description', events.description
+                            , 'photo', events.photo
+                    
+                            , 'category_name', categories.name
+                            , 'category_id', categories.id
+                    
+                            ) ORDER BY events.start_date ASC
+                        ) AS events"
+            )
+            ->groupBy("position");
+
+        // set keyword filter
+        if (isset($keyword)) {
+            $events->where('events.name', 'like', "%$keyword%");
+        }
+
+        // set category filter
+        if (isset($cat)) {
+            $events->where('events.category_id', '=', $cat);
+        }
+
+        // set date filter
+        if ($date == 'month') {
+            $events->whereMonth('events.start_date', '=', Carbon::now()->month);
+        } elseif ($date == 'year') {
+            $events->whereYear('events.start_date', '=', Carbon::now()->year);
+        } else { // default week
+            $start_of_week = Carbon::now()->startOfWeek();
+            $end_of_week = Carbon::now()->endOfWeek();
+            $events->whereBetween('events.start_date', [$start_of_week, $end_of_week]);
+        }
+
+        return response()->json([
+            'type' => 'FeatureCollection',
+            'features' => collect($events->get())->map(function ($place) {
+                return [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'lat' => $place->lat,
+                        'lng' => $place->lng,
+                        'distance' => $place->distance,
+                        'location' => $place->location,
+                        'events' => json_decode("[$place->events]") // Remember this, query result return collection of object {..},{..} and then wrap it with []array
+                    ],
+                    'geometry' => json_decode($place->geometry)
+                ];
+            })
+        ]);
+    }
+
     public function getEventsByOrganizer(Request $request, $id)
     {
         $events = Event::where('organizer_id', $id)->with(['status'])->get();

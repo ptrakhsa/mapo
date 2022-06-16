@@ -34,6 +34,7 @@ Route::get('/admin/eo/events/{id}', [ApiEventController::class, 'getEventsByOrga
 // for end user / guest
 Route::get('/locations', [ApiEventController::class, 'index']);
 Route::get('/location/{id}', [ApiEventController::class, 'eventDetail']);
+Route::get('/events', [ApiEventController::class, 'findEvents']);
 
 
 // for organizers

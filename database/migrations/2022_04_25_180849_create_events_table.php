@@ -26,6 +26,7 @@ return new class extends Migration
 
             $table->float('lat', 10, 6)->nullable();
             $table->float('lng', 10, 6)->nullable();
+            $table->point('position')->nullable();
 
 
             $table->string('photo')->nullable();

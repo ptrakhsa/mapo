@@ -88,8 +88,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // create event
-        \App\Models\Event::factory(50)->create();
-        \App\Models\SubmittedEvent::factory(50)->create();
+        // \App\Models\Event::factory(50)->create();
+        // \App\Models\SubmittedEvent::factory(50)->create();
 
 
         // create place boundaries 
