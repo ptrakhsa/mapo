@@ -132,9 +132,22 @@ class ApiEventController extends Controller
 
     public function yogyakartaGeoJSON()
     {
-        $yogyaStr = file_get_contents(storage_path() . '/app/public/geojson/yogyakarta-province.geojson');
-        $yogyaJson = json_decode($yogyaStr, true);
-        return response()->json($yogyaJson);
+        // $yogyaStr = file_get_contents(storage_path() . '/app/public/geojson/yogyakarta-province.geojson');
+        // $yogyaJson = json_decode($yogyaStr, true);
+        // return response()->json($yogyaJson);
+
+        $res = DB::select("select name, st_asgeojson(polygon_area) as polygon from boundaries");
+
+        return response()->json([
+            "type" => "FeatureCollection",
+            "features" => collect($res)->map(function ($place) {
+                return [
+                    'type' => 'Feature',
+                    'properties' => ['region' => $place->name],
+                    'geometry' => json_decode($place->polygon),
+                ];
+            })
+        ]);
     }
 
 

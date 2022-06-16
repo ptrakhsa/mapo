@@ -1,0 +1,41 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": [
+                {
+                    "id": 1,
+                    "name": "a catur tunggal"
+                },
+                {
+                    "id": 2,
+                    "name": "b catur tunggal"
+                }
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    110.39714813232422,
+                    -7.78464247607724
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": [
+                {
+                    "id": 3,
+                    "name": "a ambar ketawang"
+                }
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    110.32539367675781,
+                    -7.8030106459486
+                ]
+            }
+        }
+    ]
+}

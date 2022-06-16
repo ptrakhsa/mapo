@@ -37,6 +37,10 @@ Route::get('/jogja', function () {
     return view('jogja');
 });
 
+Route::get('/new-geojson', function () {
+    return view('new_geojson');
+});
+
 Route::get('/test', [TestController::class, 'test']);
 
 

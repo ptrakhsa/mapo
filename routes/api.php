@@ -7,7 +7,7 @@ use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\Api\ApiPopularPlaceController;
 use App\Http\Controllers\Api\ApiCategoryController;
 use App\Http\Controllers\Api\ApiEventController;
-
+use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,3 +44,4 @@ Route::get('/organizer/event/{id}/submission-history', [ApiEventController::clas
 Route::get('/categories', [ApiCategoryController::class, 'index']);
 Route::get('/popular-places/all', [ApiPopularPlaceController::class, 'index']);
 Route::get('/geojson/yogyakarta-province', [ApiEventController::class, 'yogyakartaGeoJSON']);
+Route::get('/new_geojson', [TestController::class, 'test']);
