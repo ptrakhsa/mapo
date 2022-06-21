@@ -16,7 +16,6 @@
             align-items: center;
             font-weight: bold;
         }
-
     </style>
 @endsection
 
@@ -89,7 +88,11 @@
                                 <span class="badge bg-success">{{ $event->status->status }}</span>
                             @endif
                         </div>
-                        <a href="/organizer/event/detail/{{ $event->id }}" class="btn btn-light-primary">Detail</a>
+                        @if ($event->status->status == 'verified' || $event->status->status == 'takedown')
+                            <a href="/organizer/event/detail/{{ $event->id }}" class="btn btn-light-primary">Detail</a>
+                        @else
+                            <a href="/organizer/event/edit/{{ $event->id }}" class="btn btn-light-primary">Edit</a>
+                        @endif
                     </div>
                 </div>
 
