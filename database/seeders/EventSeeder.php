@@ -424,6 +424,23 @@ use Illuminate\Database\Seede"d
                 'category_id' => \App\Models\Category::inRandomOrder()->first()->id,
             ],
 
+
+            [
+                "name" => "Sindu Kusuma Edupark",
+                "lat" => -7.764205902265705,
+                "lng" => 110.35320652788593,
+                "position" => DB::raw("ST_GeomFromText('POINT(110.35320652788593 -7.764205902265705)',4326)"),
+                'start_date' => date('Y-m-d H:i:s', strtotime("+14 days")),
+                'end_date' => date('Y-m-d H:i:s', strtotime("+15 days")),
+                "description" =>  $faker->text(),
+                'content' => $faker->randomHtml(2, 3),
+                'photo' => $faker->imageUrl(800, 600, 'cats'),
+                'link' => "https://www.google.com/maps/dir/?api=1&destination=-7.764205902265705,110.35320652788593",
+                'location' => 'Sindu Kusuma Edupark',
+                'organizer_id' => \App\Models\Organizer::inRandomOrder()->first()->id,
+                'category_id' => \App\Models\Category::inRandomOrder()->first()->id,
+            ],
+
         ]);
 
 
