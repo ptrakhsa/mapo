@@ -96,6 +96,7 @@ Route::prefix('organizer')->group(function () {
             return view('organizer.create-event');
         });
         Route::post('/event/store', [OrganizerEventController::class, 'store']);
+        Route::get('/event/edit/{id}', [OrganizerEventController::class, 'organizerEventEdit']);
         Route::get('/event/detail/{id}', [OrganizerEventController::class, 'organizerEventDetail']);
         Route::get('/profile', function () {
             return view('organizer.profile');
