@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\PopularPlaces::create([
-            'name' => 'SKE',
+            'name' => 'Sindu Kusuma Edupark',
             'lat' => -7.764205902265705,
             'lng' =>  110.35320652788593
         ]);
