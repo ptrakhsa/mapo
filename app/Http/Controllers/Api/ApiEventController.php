@@ -118,6 +118,25 @@ class ApiEventController extends Controller
         ]);
     }
 
+    public function findEventDetail($id)
+    {
+        $detail = DB::table('events')
+            ->join('categories', 'events.category_id', '=', 'categories.id')
+            ->join('organizers', 'events.organizer_id', '=', 'organizers.id')
+            ->select("events.id", "events.name", "events.description", "events.content", "events.location", "events.photo", "events.link")
+            ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
+            ->selectRaw(
+                "X(position) as lng
+                 ,Y(position) as lat
+                 ,DATE_FORMAT(events.start_date, '%I:%i, %e %b') as start_date
+                 ,DATE_FORMAT(events.end_date, '%I:%i, %e %b') as end_date"
+            )
+            ->where('events.id', $id)
+            ->first();
+
+        return response()->json($detail);
+    }
+
     public function findEvents(Request $request)
     {
         // URL query 
@@ -126,6 +145,7 @@ class ApiEventController extends Controller
         $keyword = $request->query("keyword");
         $cat = $request->query("cat"); // to filter events by category id EXPECTED VALUES (number) [1,2,3 .. ]
         $date = $request->query("date"); // to filter events by date EXPECTED VALUES (string) [week, month, year]
+        $pop = $request->query("pop"); // to filter events by popular places id EXPECTED VALUES (number) [1,2,3 .. ]
 
         // base location (Tugu Jogja)
         $lat_val = $lat ?? -7.782916432596278;
@@ -161,6 +181,8 @@ class ApiEventController extends Controller
                             , 'start_date', DATE_FORMAT(events.start_date, '%e %b, %I:%i')
                             , 'description', events.description
                             , 'photo', events.photo
+                            , 'lat', ST_Y(events.position)
+                            , 'lng', ST_X(events.position)
                     
                             , 'category_name', categories.name
                             , 'category_id', categories.id
@@ -178,6 +200,10 @@ class ApiEventController extends Controller
         // set category filter
         if (isset($cat)) {
             $events->where('events.category_id', '=', $cat);
+        }
+
+        if (isset($pop)) {
+            $events->where('events.popular_place_id', '=', $pop);
         }
 
         // set date filter
