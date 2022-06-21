@@ -10,7 +10,7 @@ class ApiPopularPlaceController extends Controller
 {
     public function index()
     {
-        $popular_places = PopularPlaces::all()->take(3);
+        $popular_places = PopularPlaces::all();
         return response()->json($popular_places);
     }
 }
