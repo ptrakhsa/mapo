@@ -43,74 +43,118 @@
 
                     <div class="card-footer d-flex justify-content-between">
                         <span>{{ $event->organizer->name }}</span>
-                        <div>
-                            <form id="reject-form" method="POST" action="/admin/event/reject/{{ $event->id }}"
-                                class="d-none">
-                                @csrf
-                                <input type="text" name="reason" id="reject-reason">
-                                <input type="submit" id="reject-form-submit">
-                            </form>
+                        {{-- footer if event in waiting --}}
+                        @if ($event->status->status != 'verified' && $event->status->status != 'takedown')
+                            <div>
+                                <form id="reject-form" method="POST" action="/admin/event/reject/{{ $event->id }}"
+                                    class="d-none">
+                                    @csrf
+                                    <input type="text" name="reason" id="reject-reason">
+                                    <input type="submit" id="reject-form-submit">
+                                </form>
 
-                            <button onclick="reject()" id="reject-btn" class="btn"
-                                style="color:rgb(158, 19, 19)">Reject</button>
-                            <script>
-                                async function reject() {
-                                    const {
-                                        value: reason
-                                    } = await Swal.fire({
-                                        title: 'Write your reason',
-                                        input: 'textarea',
-                                        inputPlaceholder: 'Type your reason here...',
-                                        inputAttributes: {
-                                            'aria-label': 'Type your reason here'
-                                        },
-                                        showCancelButton: true,
-                                        inputValidator: (value) => {
-                                            return new Promise((resolve) => {
-                                                if (value) {
-                                                    resolve()
-                                                } else {
-                                                    resolve('You need to write reason')
-                                                }
-                                            })
+                                <button onclick="reject()" id="reject-btn" class="btn"
+                                    style="color:rgb(158, 19, 19)">Reject</button>
+                                <script>
+                                    async function reject() {
+                                        const {
+                                            value: reason
+                                        } = await Swal.fire({
+                                            title: 'Write your reason',
+                                            input: 'textarea',
+                                            inputPlaceholder: 'Type your reason here...',
+                                            inputAttributes: {
+                                                'aria-label': 'Type your reason here'
+                                            },
+                                            showCancelButton: true,
+                                            inputValidator: (value) => {
+                                                return new Promise((resolve) => {
+                                                    if (value) {
+                                                        resolve()
+                                                    } else {
+                                                        resolve('You need to write reason')
+                                                    }
+                                                })
+                                            }
+                                        })
+
+                                        if (reason) {
+                                            document.getElementById('reject-reason').value = reason
+                                            document.getElementById('reject-form-submit').click()
                                         }
-                                    })
 
-                                    if (reason) {
-                                        document.getElementById('reject-reason').value = reason
-                                        document.getElementById('reject-form-submit').click()
                                     }
-
-                                }
-                            </script>
+                                </script>
 
 
 
-                            <form id="accept-form" method="POST" action="/admin/event/accept/{{ $event->id }}"
-                                class="d-none">
-                                @csrf
-                                <input type="submit" id="accept-form-submit">
-                            </form>
-                            <button onclick="accept()" class="btn btn-primary">Accept</button>
-                            <script>
-                                async function accept() {
-                                    Swal.fire({
-                                        title: 'Do you want to accept this event ?',
-                                        showCancelButton: true,
-                                        confirmButtonText: 'Yes',
-                                        denyButtonText: 'No',
-                                        customClass: {
-                                            cancelButton: 'order-1 right-gap',
-                                            confirmButton: 'order-2',
+                                <form id="accept-form" method="POST" action="/admin/event/accept/{{ $event->id }}"
+                                    class="d-none">
+                                    @csrf
+                                    <input type="submit" id="accept-form-submit">
+                                </form>
+                                <button onclick="accept()" class="btn btn-primary">Accept</button>
+                                <script>
+                                    async function accept() {
+                                        Swal.fire({
+                                            title: 'Do you want to accept this event ?',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Yes',
+                                            denyButtonText: 'No',
+                                            customClass: {
+                                                cancelButton: 'order-1 right-gap',
+                                                confirmButton: 'order-2',
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('accept-form-submit').click()
+                                            }
+                                        })
+                                    }
+                                </script>
+                            </div>
+                        @else
+                            <div>
+                                <form id="takedown-form" method="POST" action="/admin/event/takedown/{{ $event->id }}"
+                                    class="d-none">
+                                    @csrf
+                                    <input type="text" name="reason" id="takedown-reason">
+                                    <input type="submit" id="takedown-form-submit">
+                                </form>
+
+                                <button onclick="takedown()" id="takedown-btn" class="btn btn-danger">takedown</button>
+                                <script>
+                                    async function takedown() {
+                                        const {
+                                            value: reason
+                                        } = await Swal.fire({
+                                            title: 'Write your reason',
+                                            input: 'textarea',
+                                            inputPlaceholder: 'Type your reason here...',
+                                            inputAttributes: {
+                                                'aria-label': 'Type your reason here'
+                                            },
+                                            showCancelButton: true,
+                                            inputValidator: (value) => {
+                                                return new Promise((resolve) => {
+                                                    if (value) {
+                                                        resolve()
+                                                    } else {
+                                                        resolve('You need to write reason')
+                                                    }
+                                                })
+                                            }
+                                        })
+
+                                        if (reason) {
+                                            document.getElementById('takedown-reason').value = reason
+                                            document.getElementById('takedown-form-submit').click()
                                         }
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            document.getElementById('accept-form-submit').click()
-                                        }
-                                    })
-                                }
-                            </script>
-                        </div>
+
+                                    }
+                                </script>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

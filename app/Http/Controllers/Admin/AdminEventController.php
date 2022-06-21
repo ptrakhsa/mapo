@@ -65,6 +65,22 @@ class AdminEventController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+    public function takedownEvent(Request $request, $id)
+    {
+        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
+        $already_takedown = $last_submission->status == 'takedown' ? true : false;
+        if ($already_takedown) {
+            return redirect()->back()->withErrors(['message' => 'This event already takedown']);
+        }
+
+        SubmittedEvent::create([
+            'event_id' => $id,
+            'status' => 'takedown',
+            'reason' => $request->reason,
+        ]);
+        return redirect()->route('admin.dashboard');
+    }
+
     public function rejectEvent(Request $request, $id)
     {
         $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
