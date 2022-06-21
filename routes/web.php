@@ -7,8 +7,7 @@ use App\Http\Controllers\Admin\AdminOrganizerController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminEventController;
-
-
+use App\Http\Controllers\MobileAppController;
 // organizer
 use App\Http\Controllers\Organizer\OrganizerAuthController;
 use App\Http\Controllers\Organizer\OrganizerDashboardController;
@@ -36,6 +35,12 @@ Route::get('/', function () {
 Route::get('/fix-grouping', function () {
     return view('fix-grouping');
 });
+
+Route::get('/mobile/find-events', function () {
+    return view('mobile.find-events');
+});
+
+Route::get('/mobile/event/detail/id={id}', [MobileAppController::class, 'detail']);
 
 Route::get('/jogja', function () {
     return view('jogja');
