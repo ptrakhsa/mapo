@@ -55,8 +55,10 @@ Route::get('/test', [TestController::class, 'test']);
 
 Route::prefix('admin')->group(function () {
     // unauthenticated pages
-    Route::get('/login', [AdminAuthController::class, 'loginPage']);
+    Route::get('/login', [AdminAuthController::class, 'loginPage'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login']);
+
+    Route::get('/', [AdminAuthController::class, 'authCheck']);
 
     // authenticated pages
     Route::middleware(['admin'])->group(function () {
