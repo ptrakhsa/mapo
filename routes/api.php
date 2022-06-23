@@ -41,6 +41,7 @@ Route::get('/event/detail/id={id}', [ApiEventController::class, 'findEventDetail
 // for organizers
 Route::post('/event/validate', [ApiEventController::class, 'validateEvent']);
 Route::get('/organizer/event/{id}/submission-history', [ApiEventController::class, 'submissionHistory']);
+Route::post('/organizer/event/upload-content-image', [ApiEventController::class, 'uploadContentImage']);
 
 // for general (all scope)
 Route::get('/categories', [ApiCategoryController::class, 'index']);
