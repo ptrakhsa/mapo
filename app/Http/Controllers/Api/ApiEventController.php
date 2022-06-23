@@ -285,7 +285,7 @@ class ApiEventController extends Controller
         // front end send a body req as json object not form
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'image' => 'required',
+            // 'image' => 'required',
             'categoryId' => 'required',
             'description' => 'required',
             'date.start' => 'required',
