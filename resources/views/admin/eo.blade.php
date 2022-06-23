@@ -15,7 +15,7 @@
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Event Organizers</a></li>
+                            <li class="breadcrumb-item">Event Organizers</li>
                             <li class="breadcrumb-item" aria-current="page">list</li>
                             <li class="breadcrumb-item active" id="last-breadcrumb" aria-current="page"></li>
                         </ol>
@@ -58,7 +58,7 @@
                     const parseDataToView = (data) => `<tr>
                                 <td>${data.name}</td>
                                 <td>${data.description}</td>
-                                <td>${data.status && data.status.status ? data.status.status : '-'}</td>
+                                <td><span class="badge bg-light-primary">${data.status ? data.status : '-'}</span></td>
                             </tr>`
 
 
@@ -79,7 +79,8 @@
                             tableSubtitle.innerHTML = `${response.length} events`
 
                             if (response.length > 0) {
-                                const dataToView = response.map(parseDataToView)
+                                const dataToView = response.map(parseDataToView).join('')
+
                                 detailTbody.innerHTML = dataToView
                             } else {
                                 detailTbody.innerHTML = `<tr>
@@ -115,7 +116,7 @@
                                                     <th scope="row">{{ $loop->iteration }}</th>
                                                     <td onclick="getEODetail({{ $eo->id }}, '{{ $eo['name'] }}')"
                                                         class="text-bold-500">
-                                                        {{ $eo['name'] }}
+                                                        <a href="#" style="font-weight: bold">{{ $eo['name'] }}</a>
                                                     </td>
                                                     <td class="text-bold-500">{{ $eo['email'] }}</td>
                                                     <td>{{ $eo['address'] }}</td>
@@ -132,7 +133,7 @@
                 </div>
 
                 {{-- description --}}
-                <div id="eo-detail" class="d-none slide-in-right">
+                <div id="eo-detail" class="d-none slide-in-right" style="height: 100vh; overflow-y: scroll;">
                     <div class="card">
 
                         <div class="card-content">
