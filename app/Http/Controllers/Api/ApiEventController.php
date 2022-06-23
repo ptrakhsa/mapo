@@ -224,7 +224,12 @@ class ApiEventController extends Controller
 
     public function getEventsByOrganizer(Request $request, $id)
     {
-        $events = Event::where('organizer_id', $id)->with(['status'])->get();
+        $events = DB::table('events')
+            ->addSelect('id', 'name', 'description')
+            ->selectRaw('(select status from submitted_events se where se.event_id = events.id order by id desc limit 1) as status')
+            ->where('organizer_id', $request->id)
+            ->get();
+
         return response()->json($events);
     }
 
