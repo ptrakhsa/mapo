@@ -11,14 +11,6 @@
 
     <div class="bg-white">
         <div class="card px-4 py-4 mx-3 my-3">
-            <script type='text/javascript'>
-                const _events = [{
-                    id: 1,
-                    name: 'event amikom'
-                }]
-                
-                Print.postMessage(JSON.stringify(_events));
-            </script>
 
             <div class="card-content">
                 <h3>{{ $event->name }}</h3>
