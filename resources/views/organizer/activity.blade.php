@@ -19,6 +19,7 @@
 
 
         <div class="d-flex align-content-center">
+            <a class="btn" href="/organizer/dashboard">dashboard</a>
             <a class="btn" href="/organizer/activity">activity</a>
             <form action="/organizer/logout" method="POST">
                 @csrf
