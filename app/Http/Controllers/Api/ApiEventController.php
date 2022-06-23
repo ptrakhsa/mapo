@@ -155,20 +155,6 @@ class ApiEventController extends Controller
         // this query to get nearby events with user location
         $events = DB::table('events')
             ->join("categories", "categories.id", "=", "events.category_id")
-            ->whereExists(function ($query) {
-                $query->select('*')
-                    ->from('submitted_events')
-                    ->joinSub(
-                        DB::table('submitted_events')
-                            ->selectRaw('MAX(submitted_events.id) AS id_aggregate, submitted_events.event_id')
-                            ->groupBy('submitted_events.event_id'),
-                        'latestOfMany',
-                        function ($join) {
-                            $join->on("latestOfMany.id_aggregate", "=", "submitted_events.id")
-                                ->on("latestOfMany.event_id", "=", "submitted_events.event_id");
-                        }
-                    );
-            })
             ->selectRaw(
                 "events.location, 
                 ST_DISTANCE_SPHERE(`position`,$user_location) AS distance, 
@@ -190,7 +176,8 @@ class ApiEventController extends Controller
                             ) ORDER BY events.start_date ASC
                         ) AS events"
             )
-            ->groupBy("position");
+            ->groupBy("position")
+            ->whereRaw("(select status from submitted_events se where se.event_id = events.id order by id desc limit 1) = 'verified' "); // only show verified events
 
         // set keyword filter
         if (isset($keyword)) {
