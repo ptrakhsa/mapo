@@ -239,6 +239,18 @@ class ApiEventController extends Controller
         return Event::with(['organizer', 'category'])->find($id);
     }
 
+
+    public function uploadContentImage(Request $request)
+    {
+        $fileName = time() . '_' . $request->file('content-img')->getClientOriginalName();
+        $filePath = $request->file('content-img')->storeAs('content-images', $fileName, 'public');
+        return response()->json([
+            'data' => [
+                'url' => '/storage/' . $filePath
+            ]
+        ]);
+    }
+
     public function yogyakartaGeoJSON()
     {
         // $yogyaStr = file_get_contents(storage_path() . '/app/public/geojson/yogyakarta-province.geojson');
@@ -273,12 +285,14 @@ class ApiEventController extends Controller
         // front end send a body req as json object not form
         $validator = Validator::make($request->all(), [
             'name' => 'required',
+            'image' => 'required',
             'categoryId' => 'required',
             'description' => 'required',
             'date.start' => 'required',
             'date.end' => 'required',
             'location.lat' => 'required',
             'location.lng' => 'required',
+            'location.name' => 'required',
         ]);
 
 
