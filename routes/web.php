@@ -29,11 +29,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('ui');
-});
-
-Route::get('/fix-grouping', function () {
-    return view('fix-grouping');
+    return view('index');
 });
 
 Route::get('/mobile/find-events', function () {
@@ -42,15 +38,6 @@ Route::get('/mobile/find-events', function () {
 
 Route::get('/mobile/event/detail/id={id}', [MobileAppController::class, 'detail']);
 
-Route::get('/jogja', function () {
-    return view('jogja');
-});
-
-Route::get('/new-geojson', function () {
-    return view('new_geojson');
-});
-
-Route::get('/test', [TestController::class, 'test']);
 
 
 Route::prefix('admin')->group(function () {
