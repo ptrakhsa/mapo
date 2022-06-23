@@ -9,10 +9,22 @@
             <h1 class="auth-title">Log in.</h1>
             <p class="auth-subtitle mb-5">Login as Organizer</p>
 
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" action="/organizer/login">
                 @csrf
                 <div class="form-group position-relative has-icon-left mb-4">
-                    <input name="email" type="email" required class="form-control" placeholder="Email">
+                    <input name="email" type="email" required class="form-control" placeholder="Email"
+                        value="{{ old('email') }}">
                     <div class="form-control-icon">
                         <i class="bi bi-person"></i>
                     </div>

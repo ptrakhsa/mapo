@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class OrganizerAuthController extends Controller
 {
@@ -60,15 +61,17 @@ class OrganizerAuthController extends Controller
 
     public function login(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'email'   => 'required|email',
             'password' => 'required'
         ]);
 
         if (Auth::guard('organizer')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             return redirect()->intended('/organizer/dashboard');
+        } else {
+            return back()->withInput($request->only('email', 'remember'))->withErrors([['credential' => 'invalid credential']]);
         }
 
-        return back()->withInput($request->only('email', 'remember'));
+        return back()->withInput($request->only('email', 'remember'))->withErrors($validator);
     }
 }
