@@ -63,7 +63,9 @@ class OrganizerEventController extends Controller
             ->where('events.id', $id)
             ->first();
 
-        return view('organizer.event-detail', compact('event'));
+        $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $id)->orderBy('created_at', 'desc')->get();
+
+        return view('organizer.event-detail', compact('event', 'submissions'));
     }
 
     public function organizerEventDelete(Request $request)
