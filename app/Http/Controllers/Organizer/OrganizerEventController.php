@@ -66,6 +66,20 @@ class OrganizerEventController extends Controller
         return view('organizer.event-detail', compact('event'));
     }
 
+    public function organizerEventDelete(Request $request)
+    {
+        $event = Event::where('id', $request->id);
+        try {
+            $is_waiting = $event->first()->status->value('status') == 'waiting';
+            if ($event->exists() && $is_waiting) {
+                $event->delete();
+                SubmittedEvent::where('event_id', $request->id)->delete();
+                return redirect()->back();
+            }
+        } catch (\Throwable $th) {
+        }
+    }
+
     public function organizerEventEdit($id)
     {
         $event = DB::table('events')
@@ -75,7 +89,7 @@ class OrganizerEventController extends Controller
             ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
             ->where('events.id', $id)
             ->first();
-            
+
         return view('organizer.event-edit', ['event' => $event]);
     }
 

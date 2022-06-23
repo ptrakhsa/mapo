@@ -88,11 +88,39 @@
                                 <span class="badge bg-success">{{ $event->status->status }}</span>
                             @endif
                         </div>
-                        @if ($event->status->status == 'verified' || $event->status->status == 'takedown')
-                            <a href="/organizer/event/detail/{{ $event->id }}" class="btn btn-light-primary">Detail</a>
-                        @else
-                            <a href="/organizer/event/edit/{{ $event->id }}" class="btn btn-light-primary">Edit</a>
-                        @endif
+
+                        <div>
+                            @if ($event->status->status == 'verified' || $event->status->status == 'takedown')
+                                <a href="/organizer/event/detail/{{ $event->id }}"
+                                    class="btn btn-light-primary">Detail</a>
+                            @else
+                                <form action="/organizer/event/delete/{{ $event->id }}" method="POST" class="d-none">
+                                    @csrf
+                                    <input type="submit" id="delete-form-submit">
+                                </form>
+
+                                <button onclick="showDeleteDialog()" class="btn btn-light-danger">hapus</button>
+                                <script>
+                                    async function showDeleteDialog() {
+                                        Swal.fire({
+                                            title: 'Do you want to delete this event ?',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Yes',
+                                            denyButtonText: 'No',
+                                            customClass: {
+                                                cancelButton: 'order-1 right-gap',
+                                                confirmButton: 'order-2',
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('delete-form-submit').click()
+                                            }
+                                        })
+                                    }
+                                </script>
+                                <a href="/organizer/event/edit/{{ $event->id }}" class="btn btn-light-primary">Edit</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
