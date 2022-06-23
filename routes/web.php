@@ -77,10 +77,13 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('organizer')->group(function () {
+
+    Route::get('/', [OrganizerAuthController::class, 'authCheck']);
+
     // unauthenticated pages
-    Route::get('/login', [OrganizerAuthController::class, 'loginPage']);
+    Route::get('/login', [OrganizerAuthController::class, 'loginPage'])->name('organizer.login');
     Route::post('/login', [OrganizerAuthController::class, 'login']);
-    Route::get('/register', [OrganizerAuthController::class, 'registerPage']);
+    Route::get('/register', [OrganizerAuthController::class, 'registerPage'])->name('organizer.register');
     Route::post('/register', [OrganizerAuthController::class, 'register']);
 
     // authenticated pages

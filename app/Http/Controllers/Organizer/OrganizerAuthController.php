@@ -15,6 +15,14 @@ class OrganizerAuthController extends Controller
     //     $this->middleware('guest:organizer')->except('logout');
     // }
 
+
+    public function authCheck()
+    {
+        return Auth::guard('organizer')->check() ?
+            redirect()->route('organizer.dashboard')
+            : redirect()->route('organizer.login');
+    }
+
     public function registerPage()
     {
         return view('organizer.register');
