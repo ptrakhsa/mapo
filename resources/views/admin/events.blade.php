@@ -34,7 +34,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h4 class="card-title">Rejected event</h4>
-                    <select name="" id="" class="form-select" style="width:200px" onchange="changeEventStatus(this)">
+                    <select name="" id="" class="form-select" style="width:200px"
+                        onchange="changeEventStatus(this)">
                         <option {{ $current_status == 'all' ? 'selected' : '' }} value="all">All</option>
                         <option {{ $current_status == 'verified' ? 'selected' : '' }} value="verified">Verified</option>
                         <option {{ $current_status == 'rejected' ? 'selected' : '' }} value="rejected">Rejected</option>
@@ -52,8 +53,9 @@
                         <table class="table mb-0 table-lg">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Name</th>
-                                    <th>Time</th>
+                                    <th>Start date</th>
                                     <th>Location</th>
                                     <th>Organizer</th>
                                     <th class="{{ $current_status != 'all' ? 'd-none' : '' }}">Status</th>
@@ -62,7 +64,11 @@
                             <tbody>
                                 @forelse ($events as $event)
                                     <tr>
-                                        <td class="text-bold-500">{{ $event->name }}</td>
+                                        <th scope="row">{{ $loop->iteration }}</th>
+                                        <td class="text-bold-500">
+                                            <a target="_blank" href="/admin/event/show/detail/{{ $event->id }}"
+                                                style="font-weight: bold;">{{ $event->name }}</a>
+                                        </td>
                                         <td>{{ $event->start_date }}</td>
                                         <td class="text-bold-500">{{ $event->location }}</td>
                                         <td>{{ $event->organizer->name }}</td>

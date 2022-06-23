@@ -47,7 +47,22 @@ class AdminEventController extends Controller
 
     public function show(Event $event, $id)
     {
-        return view('admin.event-detail', ['event' => Event::find($id)]);
+        return view('admin.event-detail-action', ['event' => Event::find($id)]);
+    }
+
+    public function showEventDetail(Request $request)
+    {
+        $event = DB::table('events')
+            ->select('events.id', 'events.name', 'events.description', 'events.content', 'events.start_date', 'events.end_date', 'events.location', 'events.photo', 'events.link')
+            ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
+            ->join('categories', 'categories.id', '=', 'events.category_id')
+            ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
+            ->where('events.id', $request->id)
+            ->first();
+
+        $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $request->id)->orderBy('created_at', 'desc')->get();
+
+        return view('admin.event-detail', compact('event', 'submissions'));
     }
 
 

@@ -75,6 +75,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/event/accept/{id}', [AdminEventController::class, 'acceptEvent']);
         Route::post('/event/reject/{id}', [AdminEventController::class, 'rejectEvent']);
         Route::post('/event/takedown/{id}', [AdminEventController::class, 'takedownEvent']);
+
+
+        Route::get('/event/show/detail/{id}', [AdminEventController::class, 'showEventDetail']);
     });
 });
 

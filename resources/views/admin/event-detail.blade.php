@@ -1,166 +1,80 @@
-@section('title', 'Event Detail')
+@section('title', 'Event Mapper')
 @extends('layouts.admin-panel')
 
+
+@section('head')
+
+@endsection
+
+
 @section('content')
-    <div class="page-heading">
 
 
-        {{-- DASHBOARD EVENT LIST --}}
-        <section id="content-types">
-
-
-
-            <div class="card px-4 py-4">
+    <div class="row">
+        <div class="col-9">
+            <div class="card px-4 py-4 mx-3 my-3">
                 <div class="card-content">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">{{ $errors->first() }}</div>
-                    @endif
                     <h3>{{ $event->name }}</h3>
-                    <span class="badge bg-light-primary mb-3">kebudayaan</span>
-                    <img src="{{ $event->photo }}" class="img-fluid w-100" alt="">
+                    <span class="badge bg-light-primary mb-3">{{ $event->category_name }}</span>
+
+                    <img src="{{ $event->photo }}" class="img-fluid w-100" alt="event image">
                     <div class="card-body">
                         <p class="text-subtitle">{{ $event->description }}</p>
-                        {!! $event->content !!}
-                        <div class="card-text">
-                            {{-- time --}}
-                            {{-- start & end date --}}
-                            <small>
-                                <span class="fa-fw select-all fas"></span>
-                                {{ $event->start_date }} until {{ $event->end_date }}
-                            </small>
-                            <br>
-                            <small>
-                                <span class="fa-fw select-all fas"></span>
-                                {{ $event->location }}
-                            </small>
-                            <br>
-                            <small>
-                                <span class="fa-fw select-all fas"></span>
-                                <a href="{{ $event->link }}" target="_blank">{{ $event->link }}</a>
-                            </small>
+
+                        <div class="mb-3">
+                            {!! $event->content !!}
                         </div>
+                        <small>
+                            <span class="fa-fw select-all fas"></span>
+                            <span>{{ $event->start_date }}</span>
+                        </small>
+                        <br>
+                        <small>
+                            <span class="fa-fw select-all fas"></span>
+                            <span>{{ $event->location }}</span>
+                        </small>
+                        <br>
+
                     </div>
 
                     <div class="card-footer d-flex justify-content-between">
-                        <span>{{ $event->organizer->name }}</span>
-                        {{-- footer if event in waiting --}}
-                        @if ($event->status->status != 'verified' && $event->status->status != 'takedown')
-                            <div>
-                                <form id="reject-form" method="POST" action="/admin/event/reject/{{ $event->id }}"
-                                    class="d-none">
-                                    @csrf
-                                    <input type="text" name="reason" id="reject-reason">
-                                    <input type="submit" id="reject-form-submit">
-                                </form>
-
-                                <button onclick="reject()" id="reject-btn" class="btn"
-                                    style="color:rgb(158, 19, 19)">Reject</button>
-                                <script>
-                                    async function reject() {
-                                        const {
-                                            value: reason
-                                        } = await Swal.fire({
-                                            title: 'Write your reason',
-                                            input: 'textarea',
-                                            inputPlaceholder: 'Type your reason here...',
-                                            inputAttributes: {
-                                                'aria-label': 'Type your reason here'
-                                            },
-                                            showCancelButton: true,
-                                            inputValidator: (value) => {
-                                                return new Promise((resolve) => {
-                                                    if (value) {
-                                                        resolve()
-                                                    } else {
-                                                        resolve('You need to write reason')
-                                                    }
-                                                })
-                                            }
-                                        })
-
-                                        if (reason) {
-                                            document.getElementById('reject-reason').value = reason
-                                            document.getElementById('reject-form-submit').click()
-                                        }
-
-                                    }
-                                </script>
-
-
-
-                                <form id="accept-form" method="POST" action="/admin/event/accept/{{ $event->id }}"
-                                    class="d-none">
-                                    @csrf
-                                    <input type="submit" id="accept-form-submit">
-                                </form>
-                                <button onclick="accept()" class="btn btn-primary">Accept</button>
-                                <script>
-                                    async function accept() {
-                                        Swal.fire({
-                                            title: 'Do you want to accept this event ?',
-                                            showCancelButton: true,
-                                            confirmButtonText: 'Yes',
-                                            denyButtonText: 'No',
-                                            customClass: {
-                                                cancelButton: 'order-1 right-gap',
-                                                confirmButton: 'order-2',
-                                            }
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                document.getElementById('accept-form-submit').click()
-                                            }
-                                        })
-                                    }
-                                </script>
-                            </div>
-                        @else
-                            <div>
-                                <form id="takedown-form" method="POST" action="/admin/event/takedown/{{ $event->id }}"
-                                    class="d-none">
-                                    @csrf
-                                    <input type="text" name="reason" id="takedown-reason">
-                                    <input type="submit" id="takedown-form-submit">
-                                </form>
-
-                                <button onclick="takedown()" id="takedown-btn" class="btn btn-danger">takedown</button>
-                                <script>
-                                    async function takedown() {
-                                        const {
-                                            value: reason
-                                        } = await Swal.fire({
-                                            title: 'Write your reason',
-                                            input: 'textarea',
-                                            inputPlaceholder: 'Type your reason here...',
-                                            inputAttributes: {
-                                                'aria-label': 'Type your reason here'
-                                            },
-                                            showCancelButton: true,
-                                            inputValidator: (value) => {
-                                                return new Promise((resolve) => {
-                                                    if (value) {
-                                                        resolve()
-                                                    } else {
-                                                        resolve('You need to write reason')
-                                                    }
-                                                })
-                                            }
-                                        })
-
-                                        if (reason) {
-                                            document.getElementById('takedown-reason').value = reason
-                                            document.getElementById('takedown-form-submit').click()
-                                        }
-
-                                    }
-                                </script>
-                            </div>
-                        @endif
+                        <span>{{ $event->organizer_name }}</span>
+                        <a target="_blank" href="{{ $event->link }}" class="btn btn-primary">Gmaps route</a>
                     </div>
                 </div>
             </div>
-        </section>
-        {{-- END DASHBOARD EVENT LIST --}}
+        </div>
+        <div class="col-3" style="position: relative;">
+            <div class="card px-4 py-4 mx-3 my-3" >
+                <div class="card-content">
+                    <h6 class="">Submission history</h6>
+                    <ul>
 
+                        @foreach ($submissions as $sub)
+                            <li class="mb-3">
+                                <strong>{{ $sub->status }}</strong>
+                                <br>
+                                <small>
+                                    <span class="fa-fw select-all fas"></span>
+                                    <span>{{ $sub->created_at ?? '-' }}</span>
+                                </small>
 
+                                <br>
+
+                                @if ($sub->status == 'rejected' || $sub->status == 'takedown')
+                                    <small>
+                                        <span class="bi bi-file-earmark-medical-fill"></span>
+                                        <span style="color: rgb(205, 56, 56)">{{ $sub->reason ?? "-" }}</span>
+                                    </small>
+                                @endif
+                            </li>
+                        @endforeach
+
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+
+
 @endsection
