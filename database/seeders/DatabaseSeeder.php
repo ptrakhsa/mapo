@@ -93,6 +93,10 @@ class DatabaseSeeder extends Seeder
 
 
         // create place boundaries 
-        // $this->call(PlaceBoundarySeeder::class);
+        $this->call(PlaceBoundarySeeder::class);
+
+
+        // create event with dataset 
+        $this->call(EventSeeder::class);
     }
 }
