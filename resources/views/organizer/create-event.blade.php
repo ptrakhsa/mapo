@@ -16,7 +16,15 @@
 
     {{-- quil editor css --}}
     <link rel="stylesheet" href="/assets/vendors/quill/quill.bubble.css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.core.css">
     <link rel="stylesheet" href="/assets/vendors/quill/quill.snow.css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.imageUploader.min.css">
+
+    {{-- load quil js --}}
+    <script src="/assets/vendors/quill/quill.min.js"></script>
+    <script src="/assets/vendors/quill/image-resize.min.js"></script>
+    <script src="/assets/vendors/quill/image-drop.min.js"></script>
+    <script src="/assets/vendors/quill/quill.imageUploader.min.js"></script>
 
 
     <style>
@@ -248,12 +256,84 @@
             },
 
             mounted() {
+                this.InstantiatingQuil()
                 this.initMap()
                 this.loadJogjaBounds()
                 this.getCategories()
             },
 
             methods: {
+                InstantiatingQuil() {
+
+                    Quill.register("modules/imageUploader", ImageUploader);
+                    this.quilInstance = new Quill("#full", {
+                        bounds: "#full-container .editor",
+                        modules: {
+                            imageUploader: {
+                                upload: file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append("content-img", file);
+                                    const config = {
+                                        method: "POST",
+                                        body: formData
+                                    }
+                                    const url = "/api/organizer/event/upload-content-image"
+
+                                    fetch(url, config)
+                                        .then(response => response.json())
+                                        .then(result => resolve(result.data.url))
+                                        .catch(error => reject("Upload failed"));
+                                })
+                            },
+                            imageResize: {
+                                displaySize: true
+                            },
+                            imageDrop: true,
+                            toolbar: [
+                                [{
+                                    font: []
+                                }, {
+                                    size: []
+                                }],
+                                ["bold", "italic", "underline", "strike"],
+                                [{
+                                        color: []
+                                    },
+                                    {
+                                        background: []
+                                    }
+                                ],
+                                [{
+                                        script: "super"
+                                    },
+                                    {
+                                        script: "sub"
+                                    }
+                                ],
+                                [{
+                                        list: "ordered"
+                                    },
+                                    {
+                                        list: "bullet"
+                                    },
+                                    {
+                                        indent: "-1"
+                                    },
+                                    {
+                                        indent: "+1"
+                                    }
+                                ],
+                                ["direction", {
+                                    align: []
+                                }],
+                                ["link", "image", "video"],
+                                ["clean"]
+                            ]
+                        },
+                        theme: "snow"
+                    })
+                },
+
                 setEventLocationByPopularPlace(place) {
                     const {
                         name,
@@ -352,9 +432,13 @@
                     let isValidated = await this.validateBodyRequest()
                     if (isValidated) {
                         // set wysiwyg 
-                        const contentEditor = document.getElementById('full').innerHTML;
-                        const content = document.getElementById('content');
-                        content.value = contentEditor
+                        // i decided set wysiwyg after validation, cause content field is optional and data too large if sent to validation endpoint
+                        let isQuilInstanceLoaded = this.quilInstance != null
+                        if (isQuilInstanceLoaded) { // ensure quill loaded properly
+                            const contentEditor = this.quilInstance.root.innerHTML;
+                            const content = document.getElementById('content');
+                            content.value = contentEditor
+                        }
 
                         // trigger submit click
                         document.getElementById('submitEventForm').click()
@@ -457,6 +541,7 @@
                 }
             },
             data: () => ({
+                quilInstance: null,
                 inputInvalid: {},
                 showPopularPlace: false,
                 popularPlaces: [],
@@ -512,6 +597,7 @@
 
         })
     </script>
-    <script src="/assets/vendors/quill/quill.min.js"></script>
-    <script src="/assets/js/pages/form-editor.js"></script>
+    {{-- move to top --}}
+    {{-- <script src="/assets/vendors/quill/quill.min.js"></script> --}}
+    {{-- <script src="/assets/js/pages/form-editor.js"></script> --}}
 @endsection
