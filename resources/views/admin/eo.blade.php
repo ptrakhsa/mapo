@@ -107,7 +107,6 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Address</th>
-                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -120,7 +119,6 @@
                                                     </td>
                                                     <td class="text-bold-500">{{ $eo['email'] }}</td>
                                                     <td>{{ $eo['address'] }}</td>
-                                                    <td><span class="fa-fw select-all fas"></span></td>
                                                 </tr>
                                             @endforeach
 
