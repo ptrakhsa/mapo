@@ -461,8 +461,8 @@
 
                     let formData = this.transformObjectToFormData(flattenBodyRequest)
                     let isValidated = await this.validateBodyRequest(formData)
-                    console.log(isValidated)
-                    return
+                    
+                    
                     if (isValidated) {
                         // set wysiwyg 
                         // i decided set wysiwyg after validation, cause content field is optional and data too large if sent to validation endpoint
