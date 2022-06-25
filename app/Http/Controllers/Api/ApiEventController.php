@@ -282,7 +282,7 @@ class ApiEventController extends Controller
             'name' => 'required|max:30',
             'description' => 'required|max:225',
             'category_id' => 'required|exists:App\Models\Category,id',
-            'photo' => 'required|mimes:jpg,png',
+            'photo' => 'required|mimes:jpg,png|max:1024',
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',

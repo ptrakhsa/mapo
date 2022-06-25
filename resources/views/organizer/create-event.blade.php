@@ -395,24 +395,36 @@
                     }).showToast();
                 },
 
-                validateBodyRequest(formData) {
+                async validateBodyRequest(formData) {
                     this.inputInvalid = {}
-                    return fetch('/api/event/validate', {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(async (r) => {
-                            let response = await r.json()
-                            if (r.status == 422) {
-                                this.showAlert('missing input')
-                                this.inputInvalid = response;
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        })
+                    let isValid = true;
+                    const config = {
+                        method: 'POST',
+                        body: formData,
+                    }
+                    let response = await fetch('/api/event/validate', config)
 
-                        .catch((e) => this.showAlert(e))
+                    try {
+                        if (response.status >= 400 && response.status < 500) {
+                            if (response.status == 422) {
+                                this.inputInvalid = await response.json();
+                                throw 'Input invalid';
+                            } else if (response.status == 413) {
+                                throw 'file too large';
+                            } else {
+                                throw 'client error';
+                            }
+                        } else if (response.status >= 500 && response.status <= 511) {
+                            throw 'server error';
+                        } else {
+                            throw 'something wrong';
+                        }
+                    } catch (error) {
+                        isValid = false;
+                        this.showAlert(error)
+                    }
+
+                    return isValid;
                 },
 
                 getCategories() {
