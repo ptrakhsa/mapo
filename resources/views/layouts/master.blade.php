@@ -27,12 +27,6 @@
     <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
     {{-- end toastify --}}
 
-
-    {{-- quil css --}}
-    <link rel="stylesheet" href="/assets/vendors/quill/quill.bubble.css">
-    <link rel="stylesheet" href="/assets/vendors/quill/quill.snow.css">
-    <link rel="stylesheet" href="/assets/vendors/quill/quill.core.css">
-
     {{-- basic styles --}}
     <style>
         .fontawesome-icons .the-icon svg {
@@ -41,7 +35,8 @@
 
         /* width */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 5px;
+            height: 5px;
         }
 
         /* Handle */
@@ -54,7 +49,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #78909c;
         }
-
     </style>
 
     @yield('head')
