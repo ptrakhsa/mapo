@@ -33,7 +33,7 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h4 class="card-title">Rejected event</h4>
+                    <h4 class="card-title">{{ $current_status }} events</h4>
                     <select name="" id="" class="form-select" style="width:200px"
                         onchange="changeEventStatus(this)">
                         <option {{ $current_status == 'all' ? 'selected' : '' }} value="all">All</option>
