@@ -258,7 +258,7 @@ class ApiEventController extends Controller
         // return response()->json($yogyaJson);
 
         $res = DB::select("SELECT name, ST_ASGEOJSON(polygon_area) AS polygon FROM place_boundaries");
-
+        // kene1
         return response()->json([
             "type" => "FeatureCollection",
             "features" => collect($res)->map(function ($place) {
@@ -275,24 +275,19 @@ class ApiEventController extends Controller
     public function validateEvent(Request $request)
     {
         $errors = [];
-        if ($request->name == null) {
-            array_push($errors, ['field' => 'name', 'message' => 'name required']);
-        }
-
-
 
         // validate body request from frontend 
-        // front end send a body req as json object not form
+        // from front end sent body request as form
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            // 'image' => 'required',
-            'categoryId' => 'required',
-            'description' => 'required',
-            'date.start' => 'required',
-            'date.end' => 'required',
-            'location.lat' => 'required',
-            'location.lng' => 'required',
-            'location.name' => 'required',
+            'name' => 'required|max:30',
+            'description' => 'required|max:225',
+            'category_id' => 'required|exists:App\Models\Category,id',
+            'photo' => 'required|mimes:jpg,png',
+            'location' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
         ]);
 
 
@@ -303,17 +298,33 @@ class ApiEventController extends Controller
 
 
         // event must inside jogja 
-        $not_in_popular_place = $request->location['popular_place_id'];
-        if ($not_in_popular_place == null) {
-            $lat = $request->location['lat'];
-            $lng = $request->location['lng'];
+        $not_in_popular_place = $request->popular_place_id == null ? true : false;
+        if ($not_in_popular_place) {
+            $lat = $request->lat;
+            $lng = $request->lng;
             $event_as_point_text = "POINT($lng $lat)";
-            $jogjaStr = file_get_contents(storage_path() . '/app/public/geojson/yogyakarta-province.geojson');
+            // kene2
+            $place_boundaries =
+                collect([
+                    "type" => "FeatureCollection",
+                    "features" =>
+                    collect(
+                        DB::table('place_boundaries')
+                            ->selectRaw('name, ST_ASGEOJSON(polygon_area) AS polygon')
+                            ->get()
+                    )->map(function ($place) {
+                        return [
+                            'type' => 'Feature',
+                            'properties' => ['region' => $place->name],
+                            'geometry' => json_decode($place->polygon),
+                        ];
+                    })
+                ])->toJson();
 
             $native_query = "SELECT (
                 ST_WITHIN(
                         GeomFromText('$event_as_point_text'),
-                        ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('$jogjaStr')))
+                        ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('$place_boundaries')))
                     )
                 ) AS is_inside_jogja";
             $is_inside_jogja = DB::select($native_query)[0]->is_inside_jogja == 1 ? true : false;

@@ -107,7 +107,8 @@
             </div>
 
             {{-- hidden form with data binding --}}
-            <form action="/organizer/event/store" method="POST" enctype="multipart/form-data" class="d-none">
+            <form action="/organizer/event/store" id="event-form" method="POST" enctype="multipart/form-data"
+                class="d-none">
                 @csrf
                 {{-- event --}}
                 <input type="text" name="name" :value="bodyReq.name">
@@ -135,7 +136,7 @@
                 {{-- event --}}
                 <div v-show="activeIndex == 1">
                     <div class="form-group">
-                        <input v-model="bodyReq.name" id="name" type="text" class="form-control"
+                        <input autocomplete="off" v-model="bodyReq.name" id="name" type="text" class="form-control"
                             placeholder="Event name">
                         <div class="invalid-feedback" id="name-error-feedback"></div>
                     </div>
@@ -263,6 +264,21 @@
             },
 
             methods: {
+
+                transformObjectToFormData(object) {
+                    let formData = new FormData();
+                    for (const key in object) {
+                        if (Object.hasOwnProperty.call(object, key)) {
+                            let element = object[key];
+                            if (element != null || element != undefined) {
+                                formData.append(key, element)
+                            }
+                        }
+                    }
+
+                    return formData;
+                },
+
                 InstantiatingQuil() {
 
                     Quill.register("modules/imageUploader", ImageUploader);
@@ -379,14 +395,11 @@
                     }).showToast();
                 },
 
-                validateBodyRequest() {
+                validateBodyRequest(formData) {
                     this.inputInvalid = {}
                     return fetch('/api/event/validate', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(this.bodyReq)
+                            body: formData
                         })
                         .then(async (r) => {
                             let response = await r.json()
@@ -429,7 +442,27 @@
                 },
                 async submitEvent() {
                     // validate before data submit to backend
-                    let isValidated = await this.validateBodyRequest()
+                    // object from data vue flatten based on form format
+                    // and then send to validation endpoint
+                    let flattenBodyRequest = {
+                        name: this.bodyReq.name,
+                        description: this.bodyReq.description,
+
+                        // parsed , it's means name changed from origin object name
+                        category_id: this.bodyReq.categoryId,
+                        photo: this.bodyReq.image,
+                        location: this.bodyReq.location.name,
+                        lat: this.bodyReq.location.lat,
+                        lng: this.bodyReq.location.lng,
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        popular_place_id: this.bodyReq.location.popular_place_id,
+                    }
+
+                    let formData = this.transformObjectToFormData(flattenBodyRequest)
+                    let isValidated = await this.validateBodyRequest(formData)
+                    console.log(isValidated)
+                    return
                     if (isValidated) {
                         // set wysiwyg 
                         // i decided set wysiwyg after validation, cause content field is optional and data too large if sent to validation endpoint
