@@ -296,6 +296,15 @@ class ApiEventController extends Controller
             return response()->json($errors, 422);
         }
 
+        // max one week
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+        $moreThanOneWeek = $start_date->diffInDays($end_date) > 6;
+        if ($moreThanOneWeek) {
+            array_push($errors, ['start_date' => 'event can not more than one week']);
+            return response()->json($errors, 422);
+        }
+
 
         // event must inside jogja 
         $not_in_popular_place = $request->popular_place_id == null ? true : false;
