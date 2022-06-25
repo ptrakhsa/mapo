@@ -344,6 +344,19 @@ class ApiEventController extends Controller
             }
         }
 
+        // check wheter others event already exists or not
+        $is_event_already_exists = DB::table('events')
+            ->whereRaw("(start_date between '$request->start_date' and '$request->end_date' OR end_date between '$request->start_date' and '$request->end_date' OR ('$request->start_date' between start_date and end_date))")
+            ->whereRaw("ST_DISTANCE_SPHERE(position, ST_GEOMFROMTEXT('POINT($request->lng $request->lat)', 4326)) <= 0.5")
+            ->whereRaw("(select status from submitted_events se where se.event_id = events.id order by id desc limit 1) = 'verified'")
+            ->whereNull('deleted_at')
+            ->exists();
+
+        if ($is_event_already_exists) {
+            array_push($errors, ['event' => 'another event already exists with the same location and time']);
+            return response()->json($errors, 422);
+        }
+
         if (count($errors) == 0) {
             return response()->json(['data' => true, 'status' => 'success', 'messages' => 'all data valid'], 200);
         }
