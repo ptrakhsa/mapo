@@ -421,6 +421,8 @@
                             }
                         } else if (response.status >= 500 && response.status <= 511) {
                             throw 'server error';
+                        } else if (response.status == 200) { // success exception
+                            isValid = true;
                         } else {
                             throw 'something wrong';
                         }
