@@ -177,6 +177,7 @@ class ApiEventController extends Controller
                         ) AS events"
             )
             ->groupBy("position")
+            ->whereNull('events.deleted_at')
             ->whereRaw("(select status from submitted_events se where se.event_id = events.id order by id desc limit 1) = 'verified' "); // only show verified events
 
         // set keyword filter
