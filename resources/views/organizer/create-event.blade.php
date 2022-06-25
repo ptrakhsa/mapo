@@ -162,7 +162,8 @@
 
                 {{-- time --}}
                 <div v-show="activeIndex == 2">
-                    <v-date-picker v-model="bodyReq.date" :masks="masks" is-range mode="dateTime" is-expanded>
+                    <v-date-picker v-model="bodyReq.date" :masks="masks" is-range mode="dateTime" is-expanded
+                        :min-date="currentDate">
                     </v-date-picker>
                     <div class="mt-4 d-flex justify-content-end">
                         <button @click="setStep(3)" class="btn rounded-pill btn-primary px-3 btn-sm"
@@ -243,6 +244,10 @@
         new Vue({
             el: '#app',
             computed: {
+                currentDate() {
+                    return new Date();
+                },
+
                 startDate() {
                     return this.bodyReq.date.start ? this.formatDate(this.bodyReq.date.start) : null;
                 },
@@ -473,8 +478,8 @@
 
                     let formData = this.transformObjectToFormData(flattenBodyRequest)
                     let isValidated = await this.validateBodyRequest(formData)
-                    
-                    
+
+
                     if (isValidated) {
                         // set wysiwyg 
                         // i decided set wysiwyg after validation, cause content field is optional and data too large if sent to validation endpoint
