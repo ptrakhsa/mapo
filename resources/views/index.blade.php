@@ -101,6 +101,21 @@
             outline: none !important;
             box-shadow: none;
         }
+
+
+        @keyframes blink-color {
+            0% {
+                background-color: white;
+            }
+
+            50% {
+                background-color: rgba(110, 150, 186, 0.171);
+            }
+
+            100% {
+                background-color: white;
+            }
+        }
     </style>
 
 @endsection
@@ -180,9 +195,9 @@
 
             <div id="event-list">
                 <div v-for="(event,i) in events" :key="i" v-if="isLoading == false && showDetail == false"
-                    :id="`event-card-${event.id}`" @click="getEventDetail(event)">
-                    <event-card :name="event.name" :description="event.description" :category="event.category_name"
-                        :date="event.start_date" :photo="event.photo">
+                    @click="getEventDetail(event)">
+                    <event-card :id="`event-card-${event.id}`" :name="event.name" :description="event.description"
+                        :category="event.category_name" :date="event.start_date" :photo="event.photo">
                     </event-card>
                     <hr>
                 </div>
@@ -446,8 +461,10 @@
                         const id = e.layer.feature.properties.events[0].id
                         if (id) { // ensure id exists
                             const eventList = document.getElementById('event-list');
-                            const eventCardOffset = document.getElementById(`event-card-${id}`).offsetTop -
-                                189
+                            const eventCard = document.getElementById(`event-card-${id}`);
+                            const eventCardOffset = eventCard.offsetTop - 189;
+
+                            eventCard.style.animation = 'blink-color 3s 1'
 
                             eventList.scrollTo({
                                 top: eventCardOffset,
