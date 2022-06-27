@@ -309,11 +309,8 @@
                             imageResize: {
                                 displaySize: true
                             },
-                            imageDrop: true,
                             toolbar: [
                                 [{
-                                    font: []
-                                }, {
                                     size: []
                                 }],
                                 ["bold", "italic", "underline", "strike"],
@@ -325,30 +322,13 @@
                                     }
                                 ],
                                 [{
-                                        script: "super"
-                                    },
-                                    {
-                                        script: "sub"
-                                    }
-                                ],
-                                [{
-                                        list: "ordered"
+                                        list: "ordered",
                                     },
                                     {
                                         list: "bullet"
                                     },
-                                    {
-                                        indent: "-1"
-                                    },
-                                    {
-                                        indent: "+1"
-                                    }
                                 ],
-                                ["direction", {
-                                    align: []
-                                }],
                                 ["link", "image", "video"],
-                                ["clean"]
                             ]
                         },
                         theme: "snow"
