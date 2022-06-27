@@ -455,7 +455,7 @@
                         ' ' + [
                             padTo2Digits(date.getHours()),
                             padTo2Digits(date.getMinutes()),
-                            padTo2Digits(date.getSeconds()),
+                            padTo2Digits(00),
                         ].join(':')
                     );
                 },
