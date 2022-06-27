@@ -483,7 +483,7 @@
 
                                     const eventList = events.map(it =>
                                         `<li>${it.name} <br> <small>${it.start_date}</small> </li>`
-                                    ) // show events as list element
+                                    ).join('') // show events as list element
                                     let popupContent =
                                         `<strong>Events</strong> : <br> <ul> ${eventList} </ul> <strong>Lokasi</strong> <br> ${props.location}`
 
