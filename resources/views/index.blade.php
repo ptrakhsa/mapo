@@ -285,7 +285,6 @@
 
             mounted() {
                 this.initMap()
-                this.loadJogjaBounds()
                 this.loadPopularPlaces()
                 this.getCategories()
                 this.getEvents();
@@ -406,10 +405,8 @@
                     }).addTo(this.map);
 
                     let onMoveEnd = this.debounce((props) => {
-                        console.log(props.target._zoom, 'zoom')
                         // only load events if map moved more than 200 and zoom level less than equal 14
                         if (props.distance >= 200 && props.target._zoom <= 16) {
-                            console.log('fetch data')
                             this.showDetail = false
                             this.detail = {}
 
@@ -419,8 +416,7 @@
                             isUserSetFilter
                                 ?
                                 this.showReloadBtn = true :
-                                this.showReloadBtn = false
-
+                                this.showReloadBtn = false;
 
 
                             this.map.removeLayer(this.layer);
@@ -536,7 +532,7 @@
                             this.events = events;
 
                             // remove loaded previous layer
-                            this.map.removeLayer(this.layer);
+                            // this.map.removeLayer(this.layer);
 
 
                             // load geoJSON
