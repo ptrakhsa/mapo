@@ -9,14 +9,13 @@
                 <h3>Term of conditions</h3>
                 <br>
                 <ol>
-                    <li> Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore cum in ratione aperiam facere
-                        quaerat officia nihil laudantium dolore doloremque rerum temporibus a porro, unde modi voluptatum ex
-                        recusandae eaque!</li>
-                    <li> Inventore cum in ratione aperiam facere
-                        quaerat officia nihil laudantium dolore doloremque rerum temporibus a porro, unde modi voluptatum ex
-                        recusandae eaque!</li>
-                    <li> Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore cum in ratione aperiam facere
-                        quaerat officia</li>
+                    <li>
+                        After the event is submitted, the admin will review and then decide whether your event is accepted
+                        or rejected.
+                    </li>
+                    <li> An event that has been verified can not be edited or removed.</li>
+                    <li> Organizer can't submit an event which the same time and location as another verified event.</li>
+                    <li>if your event is marked as abuse, the admin can takedown it.</li>
                 </ol>
             </div>
         </div>
