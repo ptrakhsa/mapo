@@ -14,7 +14,7 @@ Vue.component('event-card', {
                                 <div class="card-body">
                                     <h4 class="card-title" v-text="name"></h4>
                                     <span class="badge bg-light-primary mb-3" v-text="category"></span>
-                                    <p class="card-text text-truncate" v-text="description"></p>
+                                    <p v-text="description" class="card-text" style="overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;"></p>
                                     <p class="card-text">
                                         <small class="text-muted" v-text="date"></small>
                                     </p>
