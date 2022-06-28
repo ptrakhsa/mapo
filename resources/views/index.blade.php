@@ -194,6 +194,15 @@
             {{-- new list --}}
 
             <div id="event-list">
+
+                {{-- show this element when events is empty --}}
+
+                <div v-if="isEventsEmpty" class="d-flex flex-column justify-content-center align-items-center h-75">
+                    <img height="300" src="/assets/images/samples/error-404.png" />
+                    <h6>Event not found</h6>
+                    <button class="btn btn-sm btn-primary rounded-pill px-4" @click="reloadEvents()">reload</button>
+                </div>
+                {{-- whenever events not empty --}}
                 <div v-for="(event,i) in events" :key="i" v-if="isLoading == false && showDetail == false"
                     @click="getEventDetail(event)">
                     <event-card :id="`event-card-${event.id}`" :name="event.name" :description="event.description"
@@ -206,8 +215,10 @@
         </div>
         <div class="col-md-7">
             <div style="position: fixed;top:10px;right:15px;z-index: 1000;">
-                <button class="btn btn-sm btn-primary" @click="reloadEvents()" v-show="showReloadBtn">Cari di area
-                    ini</button>
+                <button class="btn btn-sm btn-light" @click="reloadEvents()" v-show="showReloadBtn">
+                    <span class="fa-fw select-all fas"></span>
+                    <span style="font-weight: bold;">reload event in this area</span>
+                </button>
             </div>
 
             <div id="mapid"></div>
@@ -227,6 +238,11 @@
     <script>
         new Vue({
             el: '#app',
+            computed: {
+                isEventsEmpty() {
+                    return this.events.length === 0 && this.isLoading == false;
+                }
+            },
             data: () => ({
                 showReloadBtn: false,
                 showPopularPlaces: false,
