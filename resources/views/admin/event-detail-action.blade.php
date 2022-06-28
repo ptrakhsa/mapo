@@ -153,6 +153,34 @@
 
                                     }
                                 </script>
+
+                                <form id="done" method="POST" action="/admin/event/done/{{ $event->id }}"
+                                    class="d-none">
+                                    @csrf
+                                    <input type="submit" id="done-form-submit">
+                                </form>
+
+                                <button onclick="done()" id="done-btn" class="btn btn-success">mark as done</button>
+                                <script>
+                                    async function done() {
+                                        Swal.fire({
+                                            title: 'Do you want to mark this event as done ?',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Yes',
+                                            denyButtonText: 'No',
+                                            customClass: {
+                                                cancelButton: 'order-1 right-gap',
+                                                confirmButton: 'order-2',
+                                            }
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('done-form-submit').click()
+                                            }
+                                        })
+
+                                    }
+                                </script>
+
                             </div>
                         @endif
                     </div>

@@ -80,6 +80,20 @@ class AdminEventController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+    public function markAsDoneEvent(Request $request, $id)
+    {
+        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
+        $already_verified = $last_submission->status == 'verified' ? true : false;
+        if ($already_verified) {
+            return redirect()->back()->withErrors(['message' => 'This event already verified']);
+        }
+        SubmittedEvent::create([
+            'event_id' => $id,
+            'status' => 'done',
+        ]);
+        return redirect()->route('admin.dashboard');
+    }
+
     public function takedownEvent(Request $request, $id)
     {
         $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();

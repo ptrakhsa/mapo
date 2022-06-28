@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('submitted_events', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('event_id');
-            $table->enum('status', ['rejected', 'verified', 'waiting', 'takedown'])->nullable();
+            $table->enum('status', ['rejected', 'verified', 'waiting', 'takedown', 'done'])->nullable();
             $table->text('reason')->nullable();
             $table->timestamps();
             $table->softDeletes();
