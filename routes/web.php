@@ -92,9 +92,9 @@ Route::prefix('organizer')->group(function () {
             return view('organizer.create-event');
         });
         Route::post('/event/store', [OrganizerEventController::class, 'store']);
-        Route::get('/event/edit', function () {
-            return view('organizer.event-edit');
-        });
+        Route::get('/event/edit/{id}', [OrganizerEventController::class, 'showEditPage']);
+        Route::post('/event/update/{id}', [OrganizerEventController::class, 'editEvent']);
+
         Route::post('/event/delete/{id}', [OrganizerEventController::class, 'organizerEventDelete']);
         Route::get('/event/detail/{id}', [OrganizerEventController::class, 'organizerEventDetail']);
         Route::get('/profile', function () {

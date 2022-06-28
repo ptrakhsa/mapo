@@ -109,8 +109,8 @@
             </div>
 
             {{-- hidden form with data binding --}}
-            <form action="/organizer/event/store" id="event-form" method="POST" enctype="multipart/form-data"
-                class="d-none">
+            <form action="/organizer/event/update/{{ $id }}" id="event-form" method="POST"
+                enctype="multipart/form-data" class="d-none">
                 @csrf
                 {{-- event --}}
                 <input type="text" name="name" :value="bodyReq.name">
@@ -130,7 +130,7 @@
                 <input type="text" name="content" id="content">
                 {{-- <input type="text" name="link" :value="bodyReq.link"> --}}
 
-                <input type="submit" value="submit" id="submitEventForm">
+                <input type="submit" value="submit" id="submitEditEventForm">
             </form>
 
             {{-- stepper content --}}
@@ -219,8 +219,8 @@
                             placeholder="link integrasi google map">
                     </div> --}}
                     <div class="mt-4 d-flex ">
-                        <button @click="submitEvent()" class="btn rounded-pill btn-primary btn-block btn-sm"
-                            style="font-weight: bold">Submit</button>
+                        <button @click="submitEditEvent()" class="btn rounded-pill btn-primary btn-block btn-sm"
+                            style="font-weight: bold">Update</button>
                     </div>
                 </div>
 
@@ -307,9 +307,13 @@
                 },
 
                 getEventIdFromUrl() {
-                    const currentUrl = window.location
-                    const params = new URLSearchParams(currentUrl.search);
-                    return params.get('event-id');
+                    // this function to get event id from current url
+                    // input : organizer/event/edit/29
+                    // output : 29
+                    const urlAsArray = window.location.pathname.split("/");
+                    const id = urlAsArray.slice(-1)
+
+                    return id;
                 },
 
                 async loadCurrentEvent() {
@@ -367,13 +371,15 @@
                             this.quilInstance.setContents(delta, 'silent')
                             document.getElementById('content').value = value;
 
+                            // parse from url into file
+                            let image = await _parseURLtoFile(eventById.photo)
 
                             // set body request 
                             this.bodyReq = {
                                 name: eventById.name,
                                 description: eventById.description,
                                 categoryId: eventById.category_id,
-                                image: await _parseURLtoFile(eventById.photo),
+                                image: image,
                                 location: {
                                     name: eventById.location,
                                     lat: eventById.lat,
@@ -567,7 +573,7 @@
                         ].join(':')
                     );
                 },
-                async submitEvent() {
+                async submitEditEvent() {
                     // validate before data submit to backend
                     // object from data vue flatten based on form format
                     // and then send to validation endpoint
@@ -601,7 +607,7 @@
                         }
 
                         // trigger submit click
-                        document.getElementById('submitEventForm').click()
+                        document.getElementById('submitEditEventForm').click()
                     }
                 },
 

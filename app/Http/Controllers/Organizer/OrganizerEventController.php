@@ -12,6 +12,74 @@ use Illuminate\Support\Facades\DB;
 
 class OrganizerEventController extends Controller
 {
+    public function showEditPage($id)
+    {
+        $event = Event::where('id', $id);
+        $is_exists = $event->exists();
+
+        if ($is_exists) {
+            return view('organizer.event-edit', compact('id'));
+        } else {
+            $message = 'Event not found';
+            $code = 404;
+            return view('errors.exception', compact('message', 'code'));
+        }
+    }
+
+    public function editEvent(Request $request)
+    {
+        $event = Event::where('id', $request->id);
+        $is_exists = $event->exists();
+
+        if ($is_exists) {
+            $last_status = Event::where('id', $request->id)->with(['status'])->first()->status->status;
+            $is_editable = $last_status == 'waiting' || $last_status == 'rejected';
+            if ($is_editable) {
+                // event
+                $event->name = $request->name ?? $event->name;
+                $event->description = $request->description ?? $event->description;
+                $event->category_id = $request->category_id ?? $event->category_id;
+
+                // time
+                $event->start_date = $request->start_date ?? $event->start_date;
+                $event->end_date = $request->end_date ?? $event->end_date;
+
+                // location
+                $event->location = $request->location ?? $event->location;
+                $event->position = DB::raw("ST_GeomFromText('POINT($request->lng $request->lat)',4326)") ?? $event->position;
+                $event->popular_place_id = $request->popular_place_id ?? $event->popular_place_id;
+
+                // content
+                if ($request->photo) {
+                    $fileName = time() . '_' . $request->file('photo')->getClientOriginalName();
+                    $filePath = $request->file('photo')->storeAs('events', $fileName, 'public');
+                    $event->photo = '/storage/' . $filePath;
+                }
+                $event->content = $request->content ?? $event->content;
+                $event->link = ($request->lng && $request->lat) ?? "https://www.google.com/maps/dir/?api=1&destination=$request->lat,$request->lng";
+                $event->save();
+
+                // create submission 
+                SubmittedEvent::create([
+                    'status' => 'waiting',
+                    'event_id' => $request->id,
+                ]);
+
+                //  redirecting to dashboard page
+                return redirect()->route('organizer.dashboard');
+            } else {
+                $message = 'This event not editable';
+                $code = 400;
+                return view('errors.exception', compact('message', 'code'));
+            }
+        } else {
+            $message = 'Event not found';
+            $code = 404;
+            return view('errors.exception', compact('message', 'code'));
+        }
+    }
+
+
     public function store(Request $request)
     {
         $event = new Event;
