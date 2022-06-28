@@ -82,18 +82,6 @@ class OrganizerEventController extends Controller
         }
     }
 
-    public function organizerEventEdit($id)
-    {
-        $event = DB::table('events')
-            ->select('events.id', 'events.name', 'events.description', 'events.content', 'events.start_date', 'events.end_date', 'events.location', 'events.photo', 'events.link')
-            ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
-            ->join('categories', 'categories.id', '=', 'events.category_id')
-            ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
-            ->where('events.id', $id)
-            ->first();
-
-        return view('organizer.event-edit', ['event' => $event]);
-    }
 
     public function organizerActivity()
     {

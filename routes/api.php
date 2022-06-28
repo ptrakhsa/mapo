@@ -7,6 +7,7 @@ use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\Api\ApiPopularPlaceController;
 use App\Http\Controllers\Api\ApiCategoryController;
 use App\Http\Controllers\Api\ApiEventController;
+use App\Http\Controllers\Api\ApiOrganizerController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,7 @@ Route::get('/event/detail/id={id}', [ApiEventController::class, 'findEventDetail
 // for organizers
 Route::post('/event/validate', [ApiEventController::class, 'validateEvent']);
 Route::get('/organizer/event/{id}/submission-history', [ApiEventController::class, 'submissionHistory']);
+Route::get('/organizer/event/{id}/detail', [ApiOrganizerController::class, 'getEventDetailById']);
 Route::post('/organizer/event/upload-content-image', [ApiEventController::class, 'uploadContentImage']);
 
 // for general (all scope)

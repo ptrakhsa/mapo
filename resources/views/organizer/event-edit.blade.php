@@ -16,7 +16,15 @@
 
     {{-- quil editor css --}}
     <link rel="stylesheet" href="/assets/vendors/quill/quill.bubble.css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.core.css">
     <link rel="stylesheet" href="/assets/vendors/quill/quill.snow.css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.imageUploader.min.css">
+
+    {{-- load quil js --}}
+    <script src="/assets/vendors/quill/quill.min.js"></script>
+    <script src="/assets/vendors/quill/image-resize.min.js"></script>
+    <script src="/assets/vendors/quill/image-drop.min.js"></script>
+    <script src="/assets/vendors/quill/quill.imageUploader.min.js"></script>
 
 
     <style>
@@ -26,7 +34,9 @@
         }
 
         .ql-editor {
-            min-height: 200px;
+            min-height: 300px;
+            max-height: 450px;
+            overflow-y: scroll;
         }
 
         .circle-steper {
@@ -99,7 +109,8 @@
             </div>
 
             {{-- hidden form with data binding --}}
-            <form action="/organizer/event/store" method="POST" enctype="multipart/form-data" class="d-none">
+            <form action="/organizer/event/store" id="event-form" method="POST" enctype="multipart/form-data"
+                class="d-none">
                 @csrf
                 {{-- event --}}
                 <input type="text" name="name" :value="bodyReq.name">
@@ -127,7 +138,7 @@
                 {{-- event --}}
                 <div v-show="activeIndex == 1">
                     <div class="form-group">
-                        <input v-model="bodyReq.name" id="name" type="text" class="form-control"
+                        <input autocomplete="off" v-model="bodyReq.name" id="name" type="text" class="form-control"
                             placeholder="Event name">
                         <div class="invalid-feedback" id="name-error-feedback"></div>
                     </div>
@@ -153,7 +164,8 @@
 
                 {{-- time --}}
                 <div v-show="activeIndex == 2">
-                    <v-date-picker v-model="bodyReq.date" :masks="masks" is-range mode="dateTime" is-expanded>
+                    <v-date-picker v-model="bodyReq.date" :masks="masks" is-range mode="dateTime" is-expanded
+                        :min-date="currentDate">
                     </v-date-picker>
                     <div class="mt-4 d-flex justify-content-end">
                         <button @click="setStep(3)" class="btn rounded-pill btn-primary px-3 btn-sm"
@@ -234,6 +246,10 @@
         new Vue({
             el: '#app',
             computed: {
+                currentDate() {
+                    return new Date();
+                },
+
                 startDate() {
                     return this.bodyReq.date.start ? this.formatDate(this.bodyReq.date.start) : null;
                 },
@@ -247,34 +263,160 @@
                 }
             },
 
-            mounted() {
+            async mounted() {
+                this.InstantiatingQuil()
                 this.initMap()
                 this.loadJogjaBounds()
                 this.getCategories()
-                this.loadEventDetail()
+                this.loadCurrentEvent();
             },
 
             methods: {
+                async loadCurrentEvent() {
 
-                loadEventDetail() {
-                    let detail = {
-                        id: {{ $event->id }},
-                        name: "{{ $event->name }}",
-                        description: "{{ $event->description }}",
-                        
-                        start_date: "{{ $event->start_date }}",
-                        end_date: "{{ $event->end_date }}",
-                        location: "{{ $event->location }}",
-                        photo: "{{ $event->photo }}",
-                        link: "{{ $event->link }}",
-                        category_name: "{{ $event->category_name }}",
-                        organizer_name: "{{ $event->organizer_name }}",
+                    // function to parse url into blob file
+                    const _parseURLtoFile = async (url) => {
+                        let response = await fetch(url);
+                        let data = await response.blob();
+                        let metadata = {
+                            type: 'image/jpeg'
+                        };
+                        let file = new File([data], "test.jpg", metadata);
+                        return file;
                     }
-                    this.bodyReq.name = detail.name;
-                    this.bodyReq.description = detail.description;
+
+                    // fucntion to validate api response
+                    const _validateRes = (res) => {
+                        // required keys 
+                        const reqKeys = ["id", "name", "description", "content", "start_date", "end_date",
+                            "location", "photo", "link", "category_id", "lng", "lat", "popular_place_id"
+                        ].sort().join("|")
+                        // convert object to arrays 
+                        let resArray = Object.keys(res).sort().join("|");
+                        // return reqKeys.every(it => resArray.some(e => e == it));
+                        return resArray === reqKeys;
+                    }
+
+                    const currentUrl = window.location
+                    const params = new URLSearchParams(currentUrl.search);
+                    const id = params.get('event-id');
+                    const apiUrl = `/api/organizer/event/${id}/detail`
+                    let eventById = {}
+
+                    const response = await fetch(apiUrl);
+
+                    try {
+                        if (response.status == 200) {
+
+                            eventById = await response.json();
+                            if (_validateRes(eventById) == false) {
+                                throw 'something wrong with api response';
+                            }
+
+                            // update marker 
+                            this.updateMarker(eventById.lat, eventById.lng);
+
+                            // set quil content 
+                            const value = eventById.content;
+                            const delta = this.quilInstance.clipboard.convert(value)
+                            this.quilInstance.setContents(delta, 'silent')
+                            document.getElementById('content').value = value;
+
+
+                            // set body request 
+                            this.bodyReq = {
+                                name: eventById.name,
+                                description: eventById.description,
+                                categoryId: eventById.category_id,
+                                image: await _parseURLtoFile(eventById.photo),
+                                location: {
+                                    name: eventById.location,
+                                    lat: eventById.lat,
+                                    lng: eventById.lng,
+                                    popular_place_id: null,
+                                },
+                                date: {
+                                    start: new Date(eventById.start_date),
+                                    end: new Date(eventById.end_date),
+                                }
+                            };
+
+
+                        } else if (response.status == 404) {
+                            throw 'event not found'
+                        } else {
+                            throw 'something wrong'
+                        }
+                    } catch (error) {
+                        this.showAlert(error)
+                    }
 
                 },
 
+                transformObjectToFormData(object) {
+                    let formData = new FormData();
+                    for (const key in object) {
+                        if (Object.hasOwnProperty.call(object, key)) {
+                            let element = object[key];
+                            if (element != null || element != undefined) {
+                                formData.append(key, element)
+                            }
+                        }
+                    }
+
+                    return formData;
+                },
+
+                InstantiatingQuil() {
+
+                    Quill.register("modules/imageUploader", ImageUploader);
+                    this.quilInstance = new Quill("#full", {
+                        bounds: "#full-container .editor",
+                        modules: {
+                            imageUploader: {
+                                upload: file => new Promise((resolve, reject) => {
+                                    const formData = new FormData();
+                                    formData.append("content-img", file);
+                                    const config = {
+                                        method: "POST",
+                                        body: formData
+                                    }
+                                    const url = "/api/organizer/event/upload-content-image"
+
+                                    fetch(url, config)
+                                        .then(response => response.json())
+                                        .then(result => resolve(result.data.url))
+                                        .catch(error => reject("Upload failed"));
+                                })
+                            },
+                            imageResize: {
+                                displaySize: true
+                            },
+                            toolbar: [
+                                [{
+                                    size: []
+                                }],
+                                ["bold", "italic", "underline", "strike"],
+                                [{
+                                        color: []
+                                    },
+                                    {
+                                        background: []
+                                    }
+                                ],
+                                [{
+                                        list: "ordered",
+                                    },
+                                    {
+                                        list: "bullet"
+                                    },
+                                ],
+                                ["link", "image", "video"],
+                            ]
+                        },
+                        theme: "snow"
+                    })
+                },
 
                 setEventLocationByPopularPlace(place) {
                     const {
@@ -321,27 +463,38 @@
                     }).showToast();
                 },
 
-                validateBodyRequest() {
+                async validateBodyRequest(formData) {
                     this.inputInvalid = {}
-                    return fetch('/api/event/validate', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(this.bodyReq)
-                        })
-                        .then(async (r) => {
-                            let response = await r.json()
-                            if (r.status == 422) {
-                                this.showAlert('missing input')
-                                this.inputInvalid = response;
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        })
+                    let isValid = true;
+                    const config = {
+                        method: 'POST',
+                        body: formData,
+                    }
+                    let response = await fetch('/api/event/validate', config)
 
-                        .catch((e) => this.showAlert(e))
+                    try {
+                        if (response.status >= 400 && response.status < 500) {
+                            if (response.status == 422) {
+                                this.inputInvalid = await response.json();
+                                throw 'Input invalid';
+                            } else if (response.status == 413) {
+                                throw 'file too large';
+                            } else {
+                                throw 'client error';
+                            }
+                        } else if (response.status >= 500 && response.status <= 511) {
+                            throw 'server error';
+                        } else if (response.status == 200) { // success exception
+                            isValid = true;
+                        } else {
+                            throw 'something wrong';
+                        }
+                    } catch (error) {
+                        isValid = false;
+                        this.showAlert(error)
+                    }
+
+                    return isValid;
                 },
 
                 getCategories() {
@@ -365,18 +518,42 @@
                         ' ' + [
                             padTo2Digits(date.getHours()),
                             padTo2Digits(date.getMinutes()),
-                            padTo2Digits(date.getSeconds()),
+                            padTo2Digits(00),
                         ].join(':')
                     );
                 },
                 async submitEvent() {
                     // validate before data submit to backend
-                    let isValidated = await this.validateBodyRequest()
+                    // object from data vue flatten based on form format
+                    // and then send to validation endpoint
+                    let flattenBodyRequest = {
+                        name: this.bodyReq.name,
+                        description: this.bodyReq.description,
+
+                        // parsed , it's means name changed from origin object name
+                        category_id: this.bodyReq.categoryId,
+                        photo: this.bodyReq.image,
+                        location: this.bodyReq.location.name,
+                        lat: this.bodyReq.location.lat,
+                        lng: this.bodyReq.location.lng,
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        popular_place_id: this.bodyReq.location.popular_place_id,
+                    }
+
+                    let formData = this.transformObjectToFormData(flattenBodyRequest)
+                    let isValidated = await this.validateBodyRequest(formData)
+
+
                     if (isValidated) {
                         // set wysiwyg 
-                        const contentEditor = document.getElementById('full').innerHTML;
-                        const content = document.getElementById('content');
-                        content.value = contentEditor
+                        // i decided set wysiwyg after validation, cause content field is optional and data too large if sent to validation endpoint
+                        let isQuilInstanceLoaded = this.quilInstance != null
+                        if (isQuilInstanceLoaded) { // ensure quill loaded properly
+                            const contentEditor = this.quilInstance.root.innerHTML;
+                            const content = document.getElementById('content');
+                            content.value = contentEditor
+                        }
 
                         // trigger submit click
                         document.getElementById('submitEventForm').click()
@@ -479,6 +656,7 @@
                 }
             },
             data: () => ({
+                quilInstance: null,
                 inputInvalid: {},
                 showPopularPlace: false,
                 popularPlaces: [],
@@ -534,6 +712,7 @@
 
         })
     </script>
-    <script src="/assets/vendors/quill/quill.min.js"></script>
-    <script src="/assets/js/pages/form-editor.js"></script>
+    {{-- move to top --}}
+    {{-- <script src="/assets/vendors/quill/quill.min.js"></script> --}}
+    {{-- <script src="/assets/js/pages/form-editor.js"></script> --}}
 @endsection

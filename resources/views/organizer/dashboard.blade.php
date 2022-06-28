@@ -119,7 +119,7 @@
                                         })
                                     }
                                 </script>
-                                <a href="/organizer/event/edit/{{ $event->id }}" class="btn btn-light-primary">Edit</a>
+                                <a href="/organizer/event/edit?event-id={{ $event->id }}" class="btn btn-light-primary">Edit</a>
                             @endif
                         </div>
                     </div>
