@@ -292,6 +292,8 @@
 
             methods: {
                 reloadEvents() {
+                    // whenever this method called, all filter reset to its default value
+                    // if you're add new filter, make sure you reseet the new filter to default value in this method
                     this.filter = {
                         cat: 0,
                         date: 1,
@@ -319,27 +321,26 @@
                     fetch('/api/categories')
                         .then(r => r.json())
                         .then(d => this.categories = d)
-                        .catch(e => this.showAlert('fail load categories'))
+                        .catch(e => alert('fail load categories'))
                 },
 
                 debounce(func, wait, immediate) {
+                    // this is debouncer helper, when you call a function as callback of this function, the function is not immediately invoked. 
+                    // but wait until timeout and wait another function is invoked or not
+                    // then main uses of debouncer is to prevent front end app brute forcing endpoint api. for example search endpoint called everytime users typing
                     var timeout;
 
                     return function executedFunction() {
-                        var context = this;
-                        var args = arguments;
-
-                        var later = function() {
-                            timeout = null;
-                            if (!immediate) func.apply(context, args);
-                        };
-
-                        var callNow = immediate && !timeout;
+                        var context = this,
+                            args = arguments,
+                            later = function() {
+                                timeout = null;
+                                if (!immediate) func.apply(context, args);
+                            },
+                            callNow = immediate && !timeout;
 
                         clearTimeout(timeout);
-
                         timeout = setTimeout(later, wait);
-
                         if (callNow) func.apply(context, args);
                     }
                 },
@@ -373,7 +374,7 @@
                 },
 
                 toggleCategory(id) {
-                    this.filter.cat = id;
+                    this.filter.cat = id; // set filter vue data based clicked category btn
                     this.getEvents();
                 },
 
@@ -435,7 +436,7 @@
                 },
 
                 async getEventDetail(property) {
-                    if (property.lat && property.lng && property.id) { // ensure required prop exists
+                    if (property.lat && property.lng && property.id) { // ensure required props are exist
                         this.map.setView([property.lat, property.lng], 18);
 
                         // open the popup
@@ -455,6 +456,8 @@
                 },
 
                 openPopupByEventId(id) {
+                    // this function called whenever user click on event card.
+                    // then map will zoom to clicked point and popup appears
                     this.layer.eachLayer(layer => {
                         // id is event id then check existence the given id in layers
                         let events = layer.feature.properties.events
@@ -468,27 +471,31 @@
                 },
 
                 scrollToEventPosition(e) {
+                    // this function called whenever user click on map point 
+                    // then event list will scroll into event card positon 
                     this.showDetail = false; // force hide detail and show list view
-                    setTimeout(() => {
-                        const id = e.layer.feature.properties.events[0].id
+                    setTimeout(() => { // make sure detail element is hidden, thats why setTimout used for
+                        const id = e.layer.feature.properties.events[0]
+                            .id // access first id of event's array
                         if (id) { // ensure id exists
                             const eventList = document.getElementById('event-list');
                             const eventCard = document.getElementById(`event-card-${id}`);
-                            const eventCardOffset = eventCard.offsetTop - 189;
+                            if (eventCard &&
+                                eventList) { // ensure elements are exist and then scroll to its position
+                                const eventCardOffset = eventCard.offsetTop - 189;
+                                eventCard.style.animation = 'blink-color 3s 1'
 
-                            eventCard.style.animation = 'blink-color 3s 1'
-
-                            eventList.scrollTo({
-                                top: eventCardOffset,
-                                behavior: 'smooth'
-                            })
+                                eventList.scrollTo({
+                                    top: eventCardOffset,
+                                    behavior: 'smooth'
+                                })
+                            }
                         }
                     }, 100)
-
-
                 },
 
                 getEvents() {
+                    // access lat and lng from center of the maps
                     let {
                         lat,
                         lng
@@ -496,12 +503,14 @@
 
                     // setup url
                     let url = `/api/events?lat=${lat}&lng=${lng}`
+
+                    // if category selected and not filled as default value then set query param &cat
                     if (this.filter.cat != 0) {
                         url += `&cat=${this.filter.cat}`
                     }
 
 
-                    // setup filter
+                    // if date filter selected 
                     if (this.filter.date == 0) {
                         url += `&date=week`
                     } else if (this.filter.date == 1) {
@@ -510,11 +519,13 @@
                         url += `&date=year`
                     }
 
+                    // if keyword filter selected and not filled as null or empty string then set query param &keyword
                     let isKeywordNotNull = this.keyword && this.keyword != ''
                     if (isKeywordNotNull) {
                         url += `&keyword=${encodeURI(this.keyword)}`
                     }
 
+                    // if popular place id selected then set query params pop &pop
                     if (this.filter.pop != null) {
                         url += `&pop=${this.filter.pop}`
                     }
@@ -524,7 +535,7 @@
                         .catch(() => alert('fail load events'))
                         .then(r => r.json())
                         .then(d => {
-                            // set loading to false 
+                            // set loading to false / hide loading
                             this.isLoading = false
 
                             // bind to data
