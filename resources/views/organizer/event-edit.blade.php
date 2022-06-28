@@ -230,6 +230,7 @@
 
 
         </div>
+        <button class="btn btn-sm" @click="getSubmissionHistory()">See submission history</button>
 
     </div>
     <!-- Leaflet JavaScript -->
@@ -272,6 +273,45 @@
             },
 
             methods: {
+                async getSubmissionHistory() {
+                    let eventId = this.getEventIdFromUrl()
+                    const url = `/api/organizer/event/${eventId}/submission-history`
+                    let response = await fetch(url)
+
+                    try {
+                        if (response.status == 200) {
+                            let history = await response.json();
+                            let content = Array.from(history).map(it => `
+                                <div style="max-height:400px;overflow-y:scroll;" class="d-flex justify-content-start flex-column align-items-start">
+                                    <div class="d-flex">
+                                        <div class="bg-info" style="width: 20px;height: 20px;border-radius: 50%;"></div> 
+                                        <div class="d-flex justify-content-start align-items-start mx-2 flex-column">
+                                            <span>${it.status}</span>
+                                            <span class="${it.reason ? '' : 'd-none'}">${it.reason}</span>
+                                            <small class="text-muted">${it.created_at}</small>
+                                        </div> 
+                                    </div>
+                                </div>
+                            `).join(''); // parse json into html content
+
+                            Swal.fire({
+                                html: content,
+                                title: "History"
+                            })
+                        } else {
+                            throw 'something wrong'
+                        }
+                    } catch (error) {
+                        this.showAlert(error)
+                    }
+                },
+
+                getEventIdFromUrl() {
+                    const currentUrl = window.location
+                    const params = new URLSearchParams(currentUrl.search);
+                    return params.get('event-id');
+                },
+
                 async loadCurrentEvent() {
 
                     // function to parse url into blob file
@@ -293,13 +333,18 @@
                         ].sort().join("|")
                         // convert object to arrays 
                         let resArray = Object.keys(res).sort().join("|");
+
+                        // compare by array 
                         // return reqKeys.every(it => resArray.some(e => e == it));
+
+                        // compare by string
+                        // sorting array, parse to string and separated by |, and finnaly compare it
+                        // expected result "id|name|description" == "id|name|description" and so on . . . . 
                         return resArray === reqKeys;
                     }
 
-                    const currentUrl = window.location
-                    const params = new URLSearchParams(currentUrl.search);
-                    const id = params.get('event-id');
+
+                    const id = this.getEventIdFromUrl();
                     const apiUrl = `/api/organizer/event/${id}/detail`
                     let eventById = {}
 

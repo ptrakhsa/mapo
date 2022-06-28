@@ -366,6 +366,17 @@ class ApiEventController extends Controller
 
     public function submissionHistory($id)
     {
-        return SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->get();
+        $subs = DB::table('submitted_events')->where('event_id', $id);
+        $is_exists = $subs->exists();
+        if ($is_exists) {
+            $subsByEventId = $subs
+                ->select('id', 'status', 'reason')
+                ->selectRaw("DATE_FORMAT(created_at, '%I:%i, %M %b %Y') as created_at")
+                ->orderByDesc('created_at')
+                ->get();
+            return response()->json($subsByEventId);
+        } else {
+            return response(['error' => true, 'message' => 'Not found'], 404);
+        }
     }
 }
