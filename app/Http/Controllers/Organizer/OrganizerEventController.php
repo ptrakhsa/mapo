@@ -123,17 +123,24 @@ class OrganizerEventController extends Controller
 
     public function organizerEventDetail($id)
     {
-        $event = DB::table('events')
-            ->select('events.id', 'events.name', 'events.description', 'events.content', 'events.start_date', 'events.end_date', 'events.location', 'events.photo', 'events.link')
-            ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
-            ->join('categories', 'categories.id', '=', 'events.category_id')
-            ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
-            ->where('events.id', $id)
-            ->first();
+        $event = DB::table('events')->where('id', $id);
+        $is_exists = $event->exists();
+        if ($is_exists) {
+            $eventById = $event
+                ->select('events.id', 'events.name', 'events.description', 'events.content', 'events.start_date', 'events.end_date', 'events.location', 'events.photo', 'events.link')
+                ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
+                ->join('categories', 'categories.id', '=', 'events.category_id')
+                ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
+                ->where('events.id', $id)
+                ->first();
 
-        $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $id)->orderBy('created_at', 'desc')->get();
-
-        return view('organizer.event-detail', compact('event', 'submissions'));
+            $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $id)->orderBy('created_at', 'desc')->get();
+            return view('organizer.event-detail', compact('event', 'submissions'));
+        } else {
+            $message = 'Event not found';
+            $code = 404;
+            return view('errors.exception', compact('message', 'code'));
+        }
     }
 
     public function organizerEventDelete(Request $request)
