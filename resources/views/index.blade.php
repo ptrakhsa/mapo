@@ -420,7 +420,7 @@
                                 this.showReloadBtn = false;
 
 
-                            this.map.removeLayer(this.layer);
+                            // this.map.removeLayer(this.layer);
                             this.getEvents()
                         }
                     }, 300)
@@ -542,8 +542,11 @@
                             const events = Array.from(d.features).map(it => it.properties.events).flat();
                             this.events = events;
 
-                            // remove loaded previous layer
-                            // this.map.removeLayer(this.layer);
+                            // remove loaded previous layer if already setted
+                            if (this.layer != null) {
+                                this.map.removeLayer(this.layer);
+                            }
+
 
 
                             // load geoJSON
