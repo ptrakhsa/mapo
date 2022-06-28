@@ -536,7 +536,9 @@
                         .then(r => r.json())
                         .then(d => {
                             // set loading to false / hide loading
-                            this.isLoading = false
+                            setTimeout(() => {
+                                this.isLoading = false;
+                            }, 250); // show loading for 200ms, you can remove it later in production mwehehehe
 
                             // bind to data
                             const events = Array.from(d.features).map(it => it.properties.events).flat();
