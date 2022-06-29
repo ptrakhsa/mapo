@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminEventController;
 use App\Http\Controllers\AdminMasterDataController;
+use App\Http\Controllers\DocController;
 use App\Http\Controllers\MobileAppController;
 // organizer
 use App\Http\Controllers\Organizer\OrganizerAuthController;
@@ -115,3 +116,6 @@ Route::prefix('organizer')->group(function () {
         });
     });
 });
+
+
+Route::get('/docs', [DocController::class, 'index']);

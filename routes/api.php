@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\ApiPopularPlaceController;
 use App\Http\Controllers\Api\ApiCategoryController;
 use App\Http\Controllers\Api\ApiEventController;
 use App\Http\Controllers\Api\ApiOrganizerController;
-use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,4 +50,3 @@ Route::post('/organizer/event/upload-content-image', [ApiEventController::class,
 Route::get('/categories', [ApiCategoryController::class, 'index']);
 Route::get('/popular-places/all', [ApiPopularPlaceController::class, 'index']);
 Route::get('/geojson/yogyakarta-province', [ApiEventController::class, 'yogyakartaGeoJSON']);
-Route::get('/new_geojson', [TestController::class, 'test']);
