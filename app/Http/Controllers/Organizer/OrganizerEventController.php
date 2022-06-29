@@ -28,11 +28,10 @@ class OrganizerEventController extends Controller
 
     public function editEvent(Request $request)
     {
-        $event = Event::where('id', $request->id);
-        $is_exists = $event->exists();
-
+        $is_exists = Event::where('id', $request->id)->exists();
         if ($is_exists) {
-            $last_status = Event::where('id', $request->id)->with(['status'])->first()->status->status;
+            $event = Event::find($request->id);
+            $last_status = $event->status->status;
             $is_editable = $last_status == 'waiting' || $last_status == 'rejected';
             if ($is_editable) {
                 // event
