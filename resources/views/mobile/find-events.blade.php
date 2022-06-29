@@ -279,18 +279,21 @@
                     <div class="card px-2 py-0 mb-3" style="cursor: pointer;" :id="`event-card-${event.id}`">
                         <div class="row no-gutters">
                             <div class="col-3">
-                                <img :src="event.photo" style="border-radius:10px;max-height: 150px;" class="img-fluid">
+                                <img :src="event.photo" style="border-radius:5px;" class="img-fluid">
                                 <!-- class:"rounded-start" -->
                             </div>
                             <div class="col-8">
                                 <div class="card-content ">
-                                    <h6 style="color: black;">
+                                    <small style="color: black;font-weight: bold;">
                                         <a :href="`/mobile/event/detail/id=${event.id}`" v-text="event.name"></a>
-                                    </h6>
-                                    <span class="badge bg-light-primary mb-2" v-text="event.category_name"></span>
-                                    <p class="card-text text-truncate" v-text="event.description"></p>
+                                    </small>
+                                    <br>
+
+                                    <small class="badge bg-light-primary mb-1" style="font-size: 13px;"
+                                        v-text="event.category_name"></small>
+                                    <small class="card-text truncate-twoline" v-text="event.description"></small>
                                     <p class="card-text">
-                                        <small class="text-muted" v-text="event.date"></small>
+                                        <small class="text-muted" v-text="event.start_date"></small>
                                     </p>
                                 </div>
                             </div>
