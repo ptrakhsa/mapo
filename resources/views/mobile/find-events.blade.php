@@ -62,7 +62,9 @@
             min-height: 60vh;
         }
 
-        #card-list-view {
+        #bottom-sheet {}
+
+        #event-list {
             z-index: 1;
             height: 40vh;
             position: fixed;
@@ -171,6 +173,20 @@
             outline: none !important;
             box-shadow: none;
         }
+
+        @keyframes blink-color {
+            0% {
+                background-color: white;
+            }
+
+            50% {
+                background-color: rgba(110, 150, 186, 0.171);
+            }
+
+            100% {
+                background-color: white;
+            }
+        }
     </style>
 
 @endsection
@@ -192,6 +208,7 @@
                 <small class="text-muted">Popular places</small>
                 <div class="d-flex flex-wrap mt-2">
                     <button v-for="(pop,i) in popularPlaces" :key="i" v-text="pop.name"
+                        @click="getEventsByPopularPlaces(pop.id)"
                         class="btn btn-sm btn-outline-primary mx-1 my-1 rounded-pill"></button>
                 </div>
             </div>
@@ -199,64 +216,83 @@
 
 
         <div class="container-1">
-            <input autocomplete="off" @click="openNav()" type="search" id="search" placeholder="Search .." />
+            <input @keyup.enter="search" v-model="keyword" autocomplete="off" @click="openNav()" type="search"
+                id="search" placeholder="Search .." />
         </div>
 
+        <div style="position: fixed;top:70px;z-index: 1000;width:100%;" class="d-flex justify-content-center">
+            <button class="btn btn-sm btn-light" @click="reloadEvents()" v-show="showReloadBtn">
+                <span class="fa-fw select-all fas"></span>
+                <span style="font-weight: bold;">reload event in this area</span>
+            </button>
+        </div>
         <div id="mapid"></div>
 
-        <div id="card-list-view">
-            <div class="px-2 mt-1 mb-2">
-                <div style="margin-bottom: 25px;overflow: auto; white-space: nowrap;" class=" py-2">
-                    {{-- category filter --}}
-                    <div class="d-inline-block">
-                        <button @click="toggleCategory(0)" :class="{ 'btn-primary': filter.cat == 0 }"
-                            class="btn btn-sm btn-outline-primary rounded-pill">All</button>
-                        <button v-for="(category,i) in categories" :key="i"
-                            @click="toggleCategory(category.id)" :class="{ 'btn-primary': filter.cat == category.id }"
-                            v-text="category.name" class="mx-1 btn btn-sm btn-outline-primary rounded-pill"></button>
-                    </div>
+        <div id="bottom-sheet">
+            <div id="event-list">
+                <div class="px-2 mt-1 mb-2">
+                    <div style="margin-bottom: 25px;overflow: auto; white-space: nowrap;" class=" py-2">
+                        {{-- category filter --}}
+                        <div class="d-inline-block">
+                            <button @click="toggleCategory(0)" :class="{ 'btn-primary': filter.cat == 0 }"
+                                class="btn btn-sm btn-outline-primary rounded-pill">All</button>
+                            <button v-for="(category,i) in categories" :key="i"
+                                @click="toggleCategory(category.id)" :class="{ 'btn-primary': filter.cat == category.id }"
+                                v-text="category.name" class="mx-1 btn btn-sm btn-outline-primary rounded-pill"></button>
+                        </div>
 
 
-                    <div class="d-inline-block mx-1" style="background-color: rgb(236, 237, 238); width: 1px;height: 30px">
-                    </div>
+                        <div class="d-inline-block mx-1"
+                            style="background-color: rgb(236, 237, 238); width: 1px;height: 30px">
+                        </div>
 
-                    {{-- time filter --}}
+                        {{-- time filter --}}
 
-                    <div class="btn-group d-inline-block">
-                        <button @click="toggleDate(1)" :class="{ 'btn-success': filter.date == 1 }"
-                            class="btn btn-sm btn-outline-success rounded-pill">this week</button>
-                        <button @click="toggleDate(2)" :class="{ 'btn-success': filter.date == 2 }"
-                            class="btn btn-sm btn-outline-success mx-1 rounded-pill">this month</button>
-                        <button @click="toggleDate(3)" :class="{ 'btn-success': filter.date == 3 }"
-                            class="btn btn-sm btn-outline-success rounded-pill">this year</button>
+                        <div class="btn-group d-inline-block">
+                            <button @click="toggleDate(1)" :class="{ 'btn-success': filter.date == 1 }"
+                                class="btn btn-sm btn-outline-success rounded-pill">this week</button>
+                            <button @click="toggleDate(2)" :class="{ 'btn-success': filter.date == 2 }"
+                                class="btn btn-sm btn-outline-success mx-1 rounded-pill">this month</button>
+                            <button @click="toggleDate(3)" :class="{ 'btn-success': filter.date == 3 }"
+                                class="btn btn-sm btn-outline-success rounded-pill">this year</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div v-if="isLoading == true">
-                <shimmer-card></shimmer-card>
-                <shimmer-card></shimmer-card>
-                <shimmer-card></shimmer-card>
-            </div>
+                {{-- shimmer card only show when loading --}}
+                <div v-if="isLoading == true">
+                    <shimmer-card></shimmer-card>
+                    <shimmer-card></shimmer-card>
+                    <shimmer-card></shimmer-card>
+                </div>
 
-            <div v-for="(event,i) in events" :key="i" v-if="isLoading == false"
-                @click="getEventDetail(event)">
-                <div class="card px-2 py-0 mb-3" style="cursor: pointer;">
-                    <div class="row no-gutters">
-                        <div class="col-3">
-                            <img :src="event.photo" style="border-radius:10px;max-height: 150px;" class="img-fluid">
-                            <!-- class:"rounded-start" -->
-                        </div>
-                        <div class="col-8">
-                            <div class="card-content ">
-                                <h6 style="color: black;">
-                                    <a :href="`/mobile/event/detail/id=${event.id}`" v-text="event.name"></a>
-                                </h6>
-                                <span class="badge bg-light-primary mb-2" v-text="event.category_name"></span>
-                                <p class="card-text text-truncate" v-text="event.description"></p>
-                                <p class="card-text">
-                                    <small class="text-muted" v-text="event.date"></small>
-                                </p>
+                {{-- show this element when events is empty --}}
+                <div v-if="isEventsEmpty" class="d-flex flex-column justify-content-center align-items-center h-75">
+                    <img height="150" src="/assets/images/samples/error-404.png" />
+                    <h6>Event not found</h6>
+                    <button class="btn btn-sm btn-primary rounded-pill px-4" @click="reloadEvents()">reload</button>
+                </div>
+
+                {{-- whenever events not empty --}}
+                <div v-for="(event,i) in events" :key="i" v-if="isLoading == false"
+                    @click="getEventDetail(event)">
+                    <div class="card px-2 py-0 mb-3" style="cursor: pointer;" :id="`event-card-${event.id}`">
+                        <div class="row no-gutters">
+                            <div class="col-3">
+                                <img :src="event.photo" style="border-radius:10px;max-height: 150px;" class="img-fluid">
+                                <!-- class:"rounded-start" -->
+                            </div>
+                            <div class="col-8">
+                                <div class="card-content ">
+                                    <h6 style="color: black;">
+                                        <a :href="`/mobile/event/detail/id=${event.id}`" v-text="event.name"></a>
+                                    </h6>
+                                    <span class="badge bg-light-primary mb-2" v-text="event.category_name"></span>
+                                    <p class="card-text text-truncate" v-text="event.description"></p>
+                                    <p class="card-text">
+                                        <small class="text-muted" v-text="event.date"></small>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -270,13 +306,21 @@
     <script>
         new Vue({
             el: '#app',
+            computed: {
+                isEventsEmpty() {
+                    return this.events.length === 0 && this.isLoading == false;
+                }
+            },
             data: () => ({
+                showReloadBtn: false,
+                showPopularPlaces: false,
                 popularPlaces: [],
-                keyword: '',
+                keyword: null,
                 categories: [],
                 filter: {
                     cat: 0,
                     date: 1,
+                    pop: null,
                 },
 
                 message: 'Hello Vue!',
@@ -309,10 +353,9 @@
 
             mounted() {
                 this.initMap()
-                // this.loadJogjaBounds()
                 this.loadPopularPlaces()
                 this.getCategories()
-                this.getEvents(this.centerPos.lat, this.centerPos.lng);
+                this.getEvents();
             },
 
             methods: {
@@ -326,6 +369,33 @@
                     document.getElementById("myNav").style.zIndex = "0";
                 },
 
+                reloadEvents() {
+                    // whenever this method called, all filter reset to its default value
+                    // if you're add new filter, make sure you reseet the new filter to default value in this method
+                    this.filter = {
+                        cat: 0,
+                        date: 1,
+                        pop: null,
+                    };
+                    this.keyword = null;
+                    this.showPopularPlaces = false;
+                    this.showReloadBtn = false;
+                    this.getEvents();
+                },
+
+                getEventsByPopularPlaces(id) {
+                    if (id) {
+                        // make toggle
+                        id == this.filter.pop ?
+                            this.filter.pop = null :
+                            this.filter.pop = id;
+
+
+                        this.getEvents();
+                        this.closeNav();
+                    }
+                },
+
                 getCategories() {
                     fetch('/api/categories')
                         .then(r => r.json())
@@ -334,23 +404,22 @@
                 },
 
                 debounce(func, wait, immediate) {
+                    // this is debouncer helper, when you call a function as callback of this function, the function is not immediately invoked. 
+                    // but wait until timeout and wait another function is invoked or not
+                    // then main uses of debouncer is to prevent front end app brute forcing endpoint api. for example search endpoint called everytime users typing
                     var timeout;
 
                     return function executedFunction() {
-                        var context = this;
-                        var args = arguments;
-
-                        var later = function() {
-                            timeout = null;
-                            if (!immediate) func.apply(context, args);
-                        };
-
-                        var callNow = immediate && !timeout;
+                        var context = this,
+                            args = arguments,
+                            later = function() {
+                                timeout = null;
+                                if (!immediate) func.apply(context, args);
+                            },
+                            callNow = immediate && !timeout;
 
                         clearTimeout(timeout);
-
                         timeout = setTimeout(later, wait);
-
                         if (callNow) func.apply(context, args);
                     }
                 },
@@ -384,16 +453,25 @@
                 },
 
                 toggleCategory(id) {
-                    this.filter.cat = id;
+                    this.filter.cat = id; // set filter vue data based clicked category btn
+                    this.getEvents();
                 },
 
 
                 search() {
-                    let isNotNull = this.keyword && this.keyword != ''
+                    // reset all filter when user search event by keyword 
+                    this.filter = {
+                        cat: 0,
+                        date: 1,
+                        pop: null,
+                    }
+                    this.getEvents();
+                    this.closeNav();
                 },
 
                 toggleDate(id) {
                     this.filter.date = id;
+                    this.getEvents();
                 },
 
                 initMap() {
@@ -403,26 +481,32 @@
                         })
                         .setView([this.centerPos.lat, this.centerPos.lng], 14);
 
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        minZoom: 11
+                    }).addTo(this.map);
+
                     L.control.zoom({
                         position: 'bottomright'
                     }).addTo(this.map);
 
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-
-                    }).addTo(this.map);
-
                     let onMoveEnd = this.debounce((props) => {
                         // only load events if map moved more than 200 and zoom level less than equal 14
-                        if (props.distance >= 200 && props.target._zoom <= 14) {
+                        if (props.distance >= 200 && props.target._zoom <= 16) {
                             this.showDetail = false
                             this.detail = {}
-                            let {
-                                lat,
-                                lng
-                            } = this.map.getCenter()
-                            this.map.removeLayer(this.layer);
-                            this.getEvents(lat, lng)
+
+                            let isUserSetFilter = this.filter.cat != 0 || this.filter.date != 1 || this
+                                .pop != null || this
+                                .keyword != null;
+                            isUserSetFilter
+                                ?
+                                this.showReloadBtn = true :
+                                this.showReloadBtn = false;
+
+
+                            // this.map.removeLayer(this.layer);
+                            this.getEvents()
                         }
                     }, 300)
 
@@ -431,13 +515,17 @@
                 },
 
                 async loadPopularPlaces() {
-                    let response = await fetch('/api/popular-places/all').then(r => r.json())
-                    this.popularPlaces = Array.from(response)
+                    let response = await fetch('/api/popular-places/all').then(r => r.json());
+                    let popularPlaces = Array.from(response);
+                    this.popularPlaces = popularPlaces;
                 },
 
                 async getEventDetail(property) {
-                    if (property.lat && property.lng && property.id) { // ensure required prop exists
+                    if (property.lat && property.lng && property.id) { // ensure required props are exist
                         this.map.setView([property.lat, property.lng], 18);
+
+                        // open the popup
+                        this.openPopupByEventId(property.id)
 
                         /** {id,name,description,content,location,photo,link,category_name,organizer_name,lng,lat,start_date,end_date,} */
                         this.detail = await fetch(`/api/event/detail/id=${property.id}`)
@@ -449,41 +537,124 @@
                     } else {
                         alert('something wrong when get detail')
                     }
-
                 },
 
-                getEvents(lat, lng) {
-                    this.isLoading = true;
-                    fetch(`/api/events?lat=${lat}&lng=${lng}`)
+                openPopupByEventId(id) {
+                    // this function called whenever user click on event card.
+                    // then map will zoom to clicked point and popup appears
+                    this.layer.eachLayer(layer => {
+                        // id is event id then check existence the given id in layers
+                        let events = layer.feature.properties.events
+                        let isIdExists = Array.from(events).some(it => it.id == id);
 
+                        if (isIdExists == true) {
+                            layer.openPopup();
+                            return;
+                        }
+                    })
+                },
+
+
+                scrollToEventPosition(e) {
+                    // this function called whenever user click on map point 
+                    // then event list will scroll into event card positon 
+                    this.showDetail = false; // force hide detail and show list view
+                    setTimeout(() => { // make sure detail element is hidden, thats why setTimout used for
+                        const id = e.layer.feature.properties.events[0]
+                            .id // access first id of event's array
+                        if (id) { // ensure id exists
+                            const eventList = document.getElementById('event-list');
+                            const eventCard = document.getElementById(`event-card-${id}`);
+
+                            if (eventCard &&
+                                eventList) { // ensure elements are exist and then scroll to its position
+                                const eventCardOffset = eventCard.offsetTop - 189;
+                                eventCard.style.animation = 'blink-color 3s 1'
+
+                                eventList.scrollTo({
+                                    top: eventCardOffset,
+                                    behavior: 'smooth'
+                                })
+                            }
+                        }
+                    }, 100)
+                },
+
+                getEvents() {
+                    // access lat and lng from center of the maps
+                    let {
+                        lat,
+                        lng
+                    } = this.map.getCenter()
+
+                    // setup url
+                    let url = `/api/events?lat=${lat}&lng=${lng}`
+
+                    // if category selected and not filled as default value then set query param &cat
+                    if (this.filter.cat != 0) {
+                        url += `&cat=${this.filter.cat}`
+                    }
+
+
+                    // if date filter selected 
+                    if (this.filter.date == 0) {
+                        url += `&date=week`
+                    } else if (this.filter.date == 1) {
+                        url += `&date=month`
+                    } else {
+                        url += `&date=year`
+                    }
+
+                    // if keyword filter selected and not filled as null or empty string then set query param &keyword
+                    let isKeywordNotNull = this.keyword && this.keyword != ''
+                    if (isKeywordNotNull) {
+                        url += `&keyword=${encodeURI(this.keyword)}`
+                    }
+
+                    // if popular place id selected then set query params pop &pop
+                    if (this.filter.pop != null) {
+                        url += `&pop=${this.filter.pop}`
+                    }
+
+                    this.isLoading = true;
+                    fetch(url)
                         .catch(() => alert('fail load events'))
                         .then(r => r.json())
                         .then(d => {
-                            // set loading to false 
-                            this.isLoading = false
+                            // set loading to false / hide loading
+                            setTimeout(() => {
+                                this.isLoading = false;
+                            }, 250); // show loading for 200ms, you can remove it later in production mwehehehe
 
                             // bind to data
                             const events = Array.from(d.features).map(it => it.properties.events).flat();
                             this.events = events;
 
+                            // remove loaded previous layer if already setted
+                            if (this.layer != null) {
+                                this.map.removeLayer(this.layer);
+                            }
+
+
 
                             // load geoJSON
                             this.layer = L.geoJSON(d, {
-                                    pointToLayer: (geoJsonPoint, latlng) => L.marker(latlng)
-                                })
-                                .bindPopup(function(layer) {
-                                    const props = layer.feature.properties
-                                    const events = Array.from(layer.feature.properties.events)
+                                    pointToLayer: (geoJsonPoint, latlng) => L.marker(latlng),
+                                    onEachFeature: (feature, layer) => {
+                                        const props = layer.feature.properties
+                                        const events = Array.from(layer.feature.properties.events)
 
-                                    const eventList = events.map(it =>
-                                        `<li>${it.name} <br> <small>${it.start_date}</small> </li>`
-                                    ) // show events as list element
-                                    let popupContent =
-                                        `<strong>Events</strong> : <br> <ul> ${eventList} </ul> <strong>Lokasi</strong> <br> ${props.location}`
+                                        const eventList = events.map(it =>
+                                            `<li>${it.name} <br> <small>${it.start_date}</small> </li>`
+                                        ).join('') // show events as list element
+                                        let popupContent =
+                                            `<strong>Events</strong> : <br> <ul> ${eventList} </ul> <strong>Lokasi</strong> <br> ${props.location}`
 
-                                    return popupContent;
+                                        layer.bindPopup(popupContent);
+                                    }
                                 })
                                 .on('click', (e) => {
+                                    this.scrollToEventPosition(e);
                                     this.map.setView([e.latlng.lat, e.latlng.lng], 30)
                                 })
                                 .addTo(this.map);
