@@ -45,7 +45,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #78909c;
         }
-
     </style>
 
     {{-- head content --}}
@@ -65,7 +64,8 @@
                             <a href="#"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
-                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i
+                                    class="bi bi-x bi-middle"></i></a>
                         </div>
                     </div>
                 </div>
@@ -74,6 +74,8 @@
                 {{--  --}}
                 @php
                     $navs = [['name' => 'Dashboard', 'link' => route('admin.dashboard'), 'icon' => 'bi bi-grid-fill'], ['name' => 'Event Organizers', 'link' => route('admin.eo'), 'icon' => 'bi bi-hexagon-fill'], ['name' => 'Events', 'link' => route('admin.events'), 'icon' => 'bi bi-file-earmark-medical-fill']];
+                    
+                    $navs_with_subs = [['name' => 'Categories', 'link' => route('admin.categories'), 'icon' => 'bi bi-file-earmark-medical-fill'], ['name' => 'Place Boundaries', 'link' => route('admin.boundaries'), 'icon' => 'bi bi-file-earmark-medical-fill']];
                 @endphp
                 <div class="sidebar-menu">
                     <ul class="menu">
@@ -86,6 +88,18 @@
                                 </a>
                             </li>
                         @endforeach
+
+                        <li class="sidebar-title">Master</li>
+                        @foreach ($navs_with_subs as $nav)
+                            <li class="sidebar-item ">
+                                <a href="{{ $nav['link'] }}" class='sidebar-link'>
+                                    <i class="{{ $nav['icon'] }}"></i>
+                                    <span>{{ $nav['name'] }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+
+
 
                         <li class="sidebar-item" style="position: absolute;bottom:30px;">
                             <form method="POST" action="/admin/logout">

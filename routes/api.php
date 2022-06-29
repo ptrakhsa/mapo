@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Api\ApiAdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventOrganizerController;
 
@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // for admin
 Route::get('/admin/eo/events/{id}', [ApiEventController::class, 'getEventsByOrganizer']);
+Route::get('/admin/place-boundaries', [ApiAdminController::class, 'placeBoundaries']);
+
 
 
 // for end user / guest

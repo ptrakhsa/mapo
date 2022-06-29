@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminOrganizerController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminEventController;
+use App\Http\Controllers\AdminMasterDataController;
 use App\Http\Controllers\MobileAppController;
 // organizer
 use App\Http\Controllers\Organizer\OrganizerAuthController;
@@ -66,6 +67,11 @@ Route::prefix('admin')->group(function () {
 
 
         Route::get('/event/show/detail/{id}', [AdminEventController::class, 'showEventDetail']);
+
+
+        // manage master data
+        Route::get('/master/categories', [AdminMasterDataController::class, 'eventCategories'])->name('admin.categories');
+        Route::get('/master/boundaries', [AdminMasterDataController::class, 'placeBoundaries'])->name('admin.boundaries');
     });
 });
 
