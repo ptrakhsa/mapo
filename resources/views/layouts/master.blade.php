@@ -37,6 +37,14 @@
             -webkit-box-orient: vertical;
         }
 
+        .truncate-twoline {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
         .fontawesome-icons .the-icon svg {
             font-size: 24px;
         }
