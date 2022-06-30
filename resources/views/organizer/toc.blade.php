@@ -16,6 +16,7 @@
                     <li>An event that has been verified can not be edited or removed.</li>
                     <li>Organizer can't submit an event which the same time and location as another verified event.</li>
                     <li>If your event is marked as abuse, <strong> Mapo </strong> can takedown it.</li>
+                    <li>Event cant more than one week.</li>
                     <li>
                         Every submitted event has 5 statuses :
                         <table class="table">
