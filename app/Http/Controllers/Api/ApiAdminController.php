@@ -51,6 +51,7 @@ class ApiAdminController extends Controller
                 return [
                     'type' => 'Feature',
                     'properties' => [
+                        'id' => $place->id,
                         'region' => $place->name ?? '-',
                         'total' => $place->total ?? 0,
 

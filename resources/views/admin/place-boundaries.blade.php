@@ -16,6 +16,15 @@
         #mapid {
             min-height: 80vh;
         }
+
+
+        .grey-bg {
+            background-color: rgba(110, 150, 186, 0.171);
+        }
+
+        .white-bg {
+            background-color: white;
+        }
     </style>
 
 @endsection
@@ -58,7 +67,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(place,i) in places" :key="i">
+                                    <tr v-for="(place,i) in places" :key="i" :id="`tr-${place.id}`">
                                         <td v-text="++i"></td>
                                         <td v-text="place.region"></td>
                                         <td v-text="place.pendidikan"></td>
@@ -120,7 +129,7 @@
                     function getColor(d) {
                         if (d >= q1 && d < q2) return '#FFEDA0'
                         else if (d >= q2 && d < q3) return '#FC4E2A'
-                        else return  '#800026'
+                        else return '#800026'
                     }
 
                     this.layer = L.geoJSON(d, {
@@ -129,6 +138,16 @@
                                 layer.on({
                                     click: (e) => {
                                         map.fitBounds(e.target.getBounds())
+                                    },
+                                    mouseover: (e) => {
+                                        const trId = `tr-${e.target.feature.properties.id}`
+                                        const trEl = document.getElementById(trId)
+                                        trEl.classList.add('grey-bg')
+                                    },
+                                    mouseout: (e) => {
+                                        const trId = `tr-${e.target.feature.properties.id}`
+                                        const trEl = document.getElementById(trId)
+                                        trEl.classList.remove('grey-bg')
                                     }
                                 });
                             },
