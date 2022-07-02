@@ -28,7 +28,7 @@
                         <span class="fa-fw select-all fas"></span>
 
                         <span class="fa-fw select-all fas"></span>
-                        <span>{{ $event->start_date }}</span>
+                        <span>{{ date_format(date_create($event->start_date), 'H:i A, j F Y') }} - {{ date_format(date_create($event->end_date), 'H:i A, j F Y') }}</span>
                     </small>
                     <br>
                     <small>

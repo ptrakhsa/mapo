@@ -26,7 +26,8 @@
                             {{-- start & end date --}}
                             <small>
                                 <span class="fa-fw select-all fas"></span>
-                                {{ $event->start_date }} until {{ $event->end_date }}
+                                {{ date_format(date_create($event->start_date), 'H:i A, j F Y') }}
+                                - {{ date_format(date_create($event->end_date), 'H:i A, j F Y') }}
                             </small>
                             <br>
                             <small>

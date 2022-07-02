@@ -128,8 +128,8 @@ class ApiEventController extends Controller
             ->selectRaw(
                 "X(position) as lng
                  ,Y(position) as lat
-                 ,DATE_FORMAT(events.start_date, '%I:%i, %e %b') as start_date
-                 ,DATE_FORMAT(events.end_date, '%I:%i, %e %b') as end_date"
+                 ,DATE_FORMAT(events.start_date, '%I:%i %p, %e %M') as start_date
+                 ,DATE_FORMAT(events.end_date, '%I:%i %p, %e %M') as end_date"
             )
             ->where('events.id', $id)
             ->first();
@@ -164,7 +164,7 @@ class ApiEventController extends Controller
                     JSON_OBJECT(
                               'id', events.id
                             , 'name', events.name
-                            , 'start_date', DATE_FORMAT(events.start_date, '%e %b, %I:%i')
+                            , 'start_date', DATE_FORMAT(events.start_date, '%e %M, %I:%i %p') 
                             , 'description', events.description
                             , 'photo', events.photo
                             , 'lat', ST_Y(events.position)

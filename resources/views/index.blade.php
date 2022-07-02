@@ -181,7 +181,7 @@
             <div id="event-detail" v-if="showDetail == true">
                 <event-detail class="slide-top" :name="detail.name" :description="detail.description"
                     :category="detail.category_name" :content="detail.content" :photo="detail.photo"
-                    :date="detail.start_date" :location="detail.location" :link="detail.link"
+                    :date="`${detail.start_date} - ${detail.end_date}`" :location="detail.location" :link="detail.link"
                     :organizer="detail.organizer_name">
                     <button @click="showDetail = false" class="close-btn">
                         x
