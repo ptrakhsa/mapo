@@ -92,7 +92,7 @@
                                 <div class="card-body">
                                     <h4 class="card-title">{{ $event->name }}</h4>
                                     <span class="badge bg-light-primary mb-3">{{ $event->category->name }}</span>
-                                    <p class="card-text">
+                                    <p class="card-text truncate-threeline">
                                         {{ $event->description }}
                                     </p>
                                     <p class="card-text">

@@ -26,6 +26,14 @@
 
     {{-- basic styles --}}
     <style>
+        .truncate-threeline {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
         .fontawesome-icons .the-icon svg {
             font-size: 24px;
         }
