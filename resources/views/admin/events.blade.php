@@ -66,7 +66,7 @@
                                     <tr>
                                         <th scope="row">{{ $loop->iteration }}</th>
                                         <td class="text-bold-500">
-                                            <a target="_blank" href="/admin/event/show/detail/{{ $event->id }}"
+                                            <a href="/admin/event/show/detail/{{ $event->id }}"
                                                 style="font-weight: bold;">{{ $event->name }}</a>
                                         </td>
                                         <td>{{ $event->start_date }}</td>

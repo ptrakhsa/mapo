@@ -92,7 +92,7 @@
 
                         <div>
                             @if ($event->status->status == 'verified' || $event->status->status == 'takedown')
-                                <a href="/organizer/event/detail/{{ $event->id }}" target="_blank"
+                                <a href="/organizer/event/detail/{{ $event->id }}"
                                     class="btn btn-light-primary">Detail</a>
                             @else
                                 <form action="/organizer/event/delete/{{ $event->id }}" method="POST" class="d-none">
