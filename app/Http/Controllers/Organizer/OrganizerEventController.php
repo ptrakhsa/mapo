@@ -55,7 +55,7 @@ class OrganizerEventController extends Controller
                     $event->photo = '/storage/' . $filePath;
                 }
                 $event->content = $request->content ?? $event->content;
-                $event->link = ($request->lng && $request->lat) ?? "https://www.google.com/maps/dir/?api=1&destination=$request->lat,$request->lng";
+                $event->link = "https://www.google.com/maps/dir/?api=1&destination=$request->lat,$request->lng" ?? $event->link;
                 $event->save();
 
                 // create submission 
