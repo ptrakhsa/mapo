@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Organizer;
 use App\Models\Category;
 use App\Models\SubmittedEvent;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
 
 class Event extends Model
@@ -16,6 +17,12 @@ class Event extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected function position(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => utf8_encode($value),
+        );
+    }
 
     public function organizer()
     {
