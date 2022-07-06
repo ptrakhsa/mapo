@@ -45,7 +45,7 @@
                     <div class="card-footer d-flex justify-content-between">
                         <span>{{ $event->organizer->name }}</span>
                         {{-- footer if event in waiting --}}
-                        @if ($event->status->status != 'verified' && $event->status->status != 'takedown')
+                        @if (in_array($event->status->status, ['waiting', 'rejected']))
                             <div>
                                 <form id="reject-form" method="POST" action="/admin/event/reject/{{ $event->id }}"
                                     class="d-none">
