@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Event map @yield('title')</title>
+    <title>mapo - @yield('title')</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
@@ -22,6 +22,8 @@
 
     <link rel="stylesheet" href="/assets/css/animation.css">
     <script src="/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <link rel="shortcut icon" href="/assets/images/logo/logo.png">
     {{-- end assets --}}
 
     {{-- basic styles --}}
@@ -57,7 +59,7 @@
 
     {{-- head content --}}
     @yield('head')
-    {{--  --}}
+    {{-- --}}
 
 </head>
 
@@ -69,42 +71,41 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="#"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="#"><img src="/assets/images/logo/logo-2.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
-                            <a href="#" class="sidebar-hide d-xl-none d-block"><i
-                                    class="bi bi-x bi-middle"></i></a>
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                         </div>
                     </div>
                 </div>
 
                 {{-- SIDEBAR --}}
-                {{--  --}}
+                {{-- --}}
                 @php
-                    $navs = [['name' => 'Dashboard', 'link' => route('admin.dashboard'), 'icon' => 'bi bi-grid-fill'], ['name' => 'Event Organizers', 'link' => route('admin.eo'), 'icon' => 'bi bi-hexagon-fill'], ['name' => 'Events', 'link' => route('admin.events'), 'icon' => 'bi bi-file-earmark-medical-fill']];
-                    
-                    $navs_with_subs = [['name' => 'Categories', 'link' => route('admin.categories'), 'icon' => 'bi bi-collection-fill'], ['name' => 'Place Boundaries', 'link' => route('admin.boundaries'), 'icon' => 'bi bi-map-fill']];
+                $navs = [['name' => 'Dashboard', 'link' => route('admin.dashboard'), 'icon' => 'bi bi-grid-fill'], ['name' => 'Event Organizers', 'link' => route('admin.eo'), 'icon' => 'bi bi-hexagon-fill'], ['name' => 'Events', 'link' => route('admin.events'), 'icon' => 'bi bi-file-earmark-medical-fill']];
+
+                $navs_with_subs = [['name' => 'Categories', 'link' => route('admin.categories'), 'icon' => 'bi bi-collection-fill'], ['name' => 'Place Boundaries', 'link' => route('admin.boundaries'), 'icon' => 'bi bi-map-fill']];
                 @endphp
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-title">Menu</li>
                         @foreach ($navs as $nav)
-                            <li class="sidebar-item  ">
-                                <a href="{{ $nav['link'] }}" class='sidebar-link'>
-                                    <i class="{{ $nav['icon'] }}"></i>
-                                    <span>{{ $nav['name'] }}</span>
-                                </a>
-                            </li>
+                        <li class="sidebar-item  ">
+                            <a href="{{ $nav['link'] }}" class='sidebar-link'>
+                                <i class="{{ $nav['icon'] }}"></i>
+                                <span>{{ $nav['name'] }}</span>
+                            </a>
+                        </li>
                         @endforeach
 
                         <li class="sidebar-title">Master</li>
                         @foreach ($navs_with_subs as $nav)
-                            <li class="sidebar-item ">
-                                <a href="{{ $nav['link'] }}" class='sidebar-link'>
-                                    <i class="{{ $nav['icon'] }}"></i>
-                                    <span>{{ $nav['name'] }}</span>
-                                </a>
-                            </li>
+                        <li class="sidebar-item ">
+                            <a href="{{ $nav['link'] }}" class='sidebar-link'>
+                                <i class="{{ $nav['icon'] }}"></i>
+                                <span>{{ $nav['name'] }}</span>
+                            </a>
+                        </li>
                         @endforeach
 
 
