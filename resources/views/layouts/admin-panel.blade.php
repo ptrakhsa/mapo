@@ -24,6 +24,11 @@
     <script src="/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
     {{-- end assets --}}
 
+    {{-- toastify --}}
+    <script src="/assets/vendors/toastify/toastify.js"></script>
+    <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
+    {{-- end toastify --}}
+
     {{-- basic styles --}}
     <style>
         .truncate-threeline {
