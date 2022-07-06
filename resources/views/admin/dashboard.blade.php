@@ -118,7 +118,7 @@
 
                     </div>
                 @empty
-                    <div>No data</div>
+                    <div>Waiting for something new ..</div>
                 @endforelse
             </div>
         </section>
