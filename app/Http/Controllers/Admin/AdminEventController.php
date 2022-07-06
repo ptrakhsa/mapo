@@ -52,7 +52,7 @@ class AdminEventController extends Controller
 
     public function show(Event $event, $id)
     {
-        return view('admin.event-detail-action', ['event' => Event::findOrFail($id)]); 
+        return view('admin.event-detail-action', ['event' => Event::findOrFail($id)]);
     }
 
     public function showEventDetail(Request $request)
@@ -94,7 +94,7 @@ class AdminEventController extends Controller
                 'event_id' => $id,
                 'status' => 'verified',
             ]);
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('message', 'Event has been accepted');
         }
         return redirect()->back()->withErrors(['message' => 'to accept, event must be in waiting']);
     }
@@ -108,7 +108,7 @@ class AdminEventController extends Controller
                 'event_id' => $id,
                 'status' => 'done',
             ]);
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('message', 'Event done');
         }
         return redirect()->back()->withErrors(['message' => 'to mark as done, event must be verified']);
     }
@@ -123,7 +123,7 @@ class AdminEventController extends Controller
                 'status' => 'takedown',
                 'reason' => $request->reason,
             ]);
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('message', 'Event has been takedown');
         }
         return redirect()->back()->withErrors(['message' => 'to takedown, event must be verified']);
     }
@@ -138,7 +138,7 @@ class AdminEventController extends Controller
                 'status' => 'rejected',
                 'reason' => $request->reason,
             ]);
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('message', 'Event has been rejected');
         }
         return redirect()->back()->withErrors(['message' => 'to reject, event must be in waiting']);
     }

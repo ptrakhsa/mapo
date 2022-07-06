@@ -20,7 +20,6 @@
             border-bottom-right-radius: 10px;
 
         }
-
     </style>
 @endsection
 @section('content')
@@ -45,8 +44,7 @@
 
                         @if ($current_status == 'upcoming')
                             {{-- separator --}}
-                            <div style="background-color: rgb(212, 217, 221); width: 2px;height: 30px"
-                                class="mx-2">
+                            <div style="background-color: rgb(212, 217, 221); width: 2px;height: 30px" class="mx-2">
                             </div>
                             {{-- end separator --}}
 
@@ -98,7 +96,7 @@
                                     <p class="card-text">
                                         <small>
                                             <span class="fa-fw select-all fas"></span>
-                                            {{ date_format(date_create($event->start_date), 'H:i A, j F Y')  }}
+                                            {{ date_format(date_create($event->start_date), 'H:i A, j F Y') }}
                                         </small>
                                         <br>
                                         <small>
@@ -127,4 +125,24 @@
         {{-- END DASHBOARD EVENT LIST --}}
 
     </div>
+
+    <script>
+        function messageNotifier(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "bottom",
+                position: "center",
+                close: true,
+                backgroundColor: '#4F6467',
+            }).showToast();
+        }
+
+        // note render 'false' is equal with false in js 
+        let message = {{ session()->has('message') ? Illuminate\Support\Js::from(session()->get('message')) : 'false' }};
+        if (message) {
+            messageNotifier(message)
+        }
+    </script>
+
 @endsection
