@@ -21,11 +21,11 @@
                         Every submitted event has 5 statuses :
                         <table class="table">
                             <tr>
-                                <td><span class="badge bg-info">waiting</span></td>
+                                <td><span class="badge bg-secondary">waiting</span></td>
                                 <td><small>waiting means an event still waiting for <strong> Mapo </strong> review.</small></td>
                             </tr>
                             <tr>
-                                <td><span class="badge bg-danger">rejected</span></td>
+                                <td><span class="badge bg-warning">rejected</span></td>
                                 <td>
                                     <small>
                                         rejected means your event was rejected/denied by <strong> Mapo </strong>, this status comes with
@@ -36,7 +36,7 @@
                             </tr>
 
                             <tr>
-                                <td><span class="badge bg-success">verified</span></td>
+                                <td><span class="badge bg-info">verified</span></td>
                                 <td>
                                     <small>
                                         verified means your event has been accepted by <strong> Mapo </strong> and listed in <strong> Mapo </strong> application.
