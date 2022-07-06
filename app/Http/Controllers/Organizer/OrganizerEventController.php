@@ -20,9 +20,15 @@ class OrganizerEventController extends Controller
         if ($is_exists) {
             return view('organizer.event-edit', compact('id'));
         } else {
-            $message = 'Event not found';
-            $code = 404;
-            return view('errors.exception', compact('message', 'code'));
+            $res = [
+                'message' => 'Event not found',
+                'code' => 404,
+                'action' => [
+                    'text' => 'back to dashboard',
+                    'url' => route('organizer.dashboard')
+                ]
+            ];
+            return view('errors.exception', compact('res'));
         }
     }
 
@@ -67,14 +73,26 @@ class OrganizerEventController extends Controller
                 //  redirecting to dashboard page
                 return redirect()->route('organizer.dashboard');
             } else {
-                $message = 'This event not editable';
-                $code = 400;
-                return view('errors.exception', compact('message', 'code'));
+                $res = [
+                    'message' => 'Event is not editable',
+                    'code' => 400,
+                    'action' => [
+                        'text' => 'back to dashboard',
+                        'url' => route('organizer.dashboard')
+                    ]
+                ];
+                return view('errors.exception', compact('res'));
             }
         } else {
-            $message = 'Event not found';
-            $code = 404;
-            return view('errors.exception', compact('message', 'code'));
+            $res = [
+                'message' => 'Event not found',
+                'code' => 404,
+                'action' => [
+                    'text' => 'back to dashboard',
+                    'url' => route('organizer.dashboard')
+                ]
+            ];
+            return view('errors.exception', compact('res'));
         }
     }
 
@@ -136,9 +154,15 @@ class OrganizerEventController extends Controller
             $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $id)->orderBy('created_at', 'desc')->get();
             return view('organizer.event-detail', compact('event', 'submissions'));
         } else {
-            $message = 'Event not found';
-            $code = 404;
-            return view('errors.exception', compact('message', 'code'));
+            $res = [
+                'message' => 'Event not found',
+                'code' => 404,
+                'action' => [
+                    'text' => 'back to dashboard',
+                    'url' => route('organizer.dashboard')
+                ]
+            ];
+            return view('errors.exception', compact('res'));
         }
     }
 

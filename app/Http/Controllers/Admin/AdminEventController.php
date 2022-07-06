@@ -52,17 +52,31 @@ class AdminEventController extends Controller
 
     public function showEventDetail(Request $request)
     {
-        $event = DB::table('events')
-            ->select('events.id', 'events.name', 'events.description', 'events.content', 'events.start_date', 'events.end_date', 'events.location', 'events.photo', 'events.link')
-            ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
-            ->join('categories', 'categories.id', '=', 'events.category_id')
-            ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
-            ->where('events.id', $request->id)
-            ->first();
+        $event = DB::table('events')->where('events.id', $request->id);
+        $is_exists = $event->exists();
+        if ($is_exists) {
+            $event = DB::table('events')
+                ->select('events.id', 'events.name', 'events.description', 'events.content', 'events.start_date', 'events.end_date', 'events.location', 'events.photo', 'events.link')
+                ->addSelect('categories.name AS category_name', 'organizers.name AS organizer_name')
+                ->join('categories', 'categories.id', '=', 'events.category_id')
+                ->join('organizers', 'organizers.id', '=', 'events.organizer_id')
+                ->where('events.id', $request->id)
+                ->first();
 
-        $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $request->id)->orderBy('created_at', 'desc')->get();
+            $submissions = DB::table('submitted_events')->selectRaw('id, status, reason, created_at')->where('event_id', $request->id)->orderBy('created_at', 'desc')->get();
 
-        return view('admin.event-detail', compact('event', 'submissions'));
+            return view('admin.event-detail', compact('event', 'submissions'));
+        } else {
+            $res = [
+                'message' => 'Event not found',
+                'code' => 404,
+                'action' => [
+                    'text' => 'back',
+                    'url' => route('admin.events')
+                ]
+            ];
+            return view('errors.exception', compact('res'));
+        }
     }
 
 
