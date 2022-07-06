@@ -74,7 +74,17 @@
                                         <td class="text-bold-500">{{ $event->location }}</td>
                                         <td>{{ $event->organizer->name }}</td>
                                         <td class="{{ $current_status != 'all' ? 'd-none' : '' }}">
-                                            {{ $event->status->status }}</td>
+                                            <span @class([
+                                                'badge',
+                                                'bg-secondary' => $event->status->status == 'waiting',
+                                                'bg-warning' => $event->status->status == 'rejected',
+                                                'bg-info' => $event->status->status == 'verified',
+                                                'bg-success' => $event->status->status == 'done',
+                                                'bg-danger' => $event->status->status == 'takedown',
+                                            ])>
+                                                {{ $event->status->status }}
+                                            </span>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
