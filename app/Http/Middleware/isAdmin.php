@@ -19,6 +19,15 @@ class isAdmin
     {
         if (Auth::guard('admin')->check())
             return $next($request);
-        return response(view('admin.401'), 401);
+
+        $res = [
+            'message' => 'Unauthenticated',
+            'code' => 401,
+            'action' => [
+                'text' => 'back to admin login',
+                'url' => route('admin.login')
+            ]
+        ];
+        return response(view('errors.exception', compact('res')), 401);
     }
 }

@@ -19,6 +19,15 @@ class isOrganizer
     {
         if (Auth::guard('organizer')->check())
             return $next($request);
-        return response(view('organizer.401'), 401);
+
+        $res = [
+            'message' => 'Unauthenticated',
+            'code' => 401,
+            'action' => [
+                'text' => 'go to login',
+                'url' => route('organizer.login')
+            ]
+        ];
+        return response(view('errors.exception', compact('res')), 401);
     }
 }
