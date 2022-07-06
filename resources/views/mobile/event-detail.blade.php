@@ -27,6 +27,18 @@
             margin: 10px 0px 10px 0px;
         }
 
+        img {
+            max-width: 100% !important;
+            width: auto;
+            height: auto;
+        }
+
+        iframe {
+            max-width: 100% !important;
+            width: auto;
+            height: auto;
+        }
+
         .box {
             width: 100%;
             height: 70px;
