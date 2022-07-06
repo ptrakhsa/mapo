@@ -87,61 +87,60 @@ class AdminEventController extends Controller
 
     public function acceptEvent(Request $request, $id)
     {
-        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
-        $already_verified = $last_submission->status == 'verified' ? true : false;
-        if ($already_verified) {
-            return redirect()->back()->withErrors(['message' => 'This event already verified']);
+        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('id', 'desc')->first();
+        $in_waiting = $last_submission->status == 'waiting' ? true : false;
+        $has_rejected = $last_submission->status == 'rejected' ? true : false;
+        if ($in_waiting or $has_rejected) {
+            SubmittedEvent::create([
+                'event_id' => $id,
+                'status' => 'verified',
+            ]);
+            return redirect()->route('admin.dashboard');
         }
-        SubmittedEvent::create([
-            'event_id' => $id,
-            'status' => 'verified',
-        ]);
-        return redirect()->route('admin.dashboard');
+        return redirect()->back()->withErrors(['message' => 'to accept, event must be in waiting or has rejected']);
     }
 
     public function markAsDoneEvent(Request $request, $id)
     {
-        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
-        $already_verified = $last_submission->status == 'verified' ? true : false;
-        if ($already_verified) {
-            return redirect()->back()->withErrors(['message' => 'This event already verified']);
+        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('id', 'desc')->first();
+        $has_verified = $last_submission->status == 'verified' ? true : false;
+        if ($has_verified) {
+            SubmittedEvent::create([
+                'event_id' => $id,
+                'status' => 'done',
+            ]);
+            return redirect()->route('admin.dashboard');
         }
-        SubmittedEvent::create([
-            'event_id' => $id,
-            'status' => 'done',
-        ]);
-        return redirect()->route('admin.dashboard');
+        return redirect()->back()->withErrors(['message' => 'to mark as done, event must be verified']);
     }
 
     public function takedownEvent(Request $request, $id)
     {
-        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
-        $already_takedown = $last_submission->status == 'takedown' ? true : false;
-        if ($already_takedown) {
-            return redirect()->back()->withErrors(['message' => 'This event already takedown']);
+        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('id', 'desc')->first();
+        $has_verified = $last_submission->status == 'verified' ? true : false;
+        if ($has_verified) {
+            SubmittedEvent::create([
+                'event_id' => $id,
+                'status' => 'takedown',
+                'reason' => $request->reason,
+            ]);
+            return redirect()->route('admin.dashboard');
         }
-
-        SubmittedEvent::create([
-            'event_id' => $id,
-            'status' => 'takedown',
-            'reason' => $request->reason,
-        ]);
-        return redirect()->route('admin.dashboard');
+        return redirect()->back()->withErrors(['message' => 'to takedown, event must be verified']);
     }
 
     public function rejectEvent(Request $request, $id)
     {
-        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('created_at', 'desc')->first();
-        $already_verified = $last_submission->status == 'verified' ? true : false;
-        if ($already_verified) {
-            return redirect()->back()->withErrors(['message' => 'This event already verified']);
+        $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('id', 'desc')->first();
+        $in_waiting = $last_submission->status == 'waiting' ? true : false;
+        if ($in_waiting) {
+            SubmittedEvent::create([
+                'event_id' => $id,
+                'status' => 'rejected',
+                'reason' => $request->reason,
+            ]);
+            return redirect()->route('admin.dashboard');
         }
-
-        SubmittedEvent::create([
-            'event_id' => $id,
-            'status' => 'rejected',
-            'reason' => $request->reason,
-        ]);
-        return redirect()->route('admin.dashboard');
+        return redirect()->back()->withErrors(['message' => 'to reject, event must be in waiting']);
     }
 }
