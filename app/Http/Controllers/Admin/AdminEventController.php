@@ -52,7 +52,7 @@ class AdminEventController extends Controller
 
     public function show(Event $event, $id)
     {
-        return view('admin.event-detail-action', ['event' => Event::find($id)]);
+        return view('admin.event-detail-action', ['event' => Event::findOrFail($id)]); 
     }
 
     public function showEventDetail(Request $request)
