@@ -37,6 +37,9 @@
                 </div>
 
                 <button class="btn btn-primary btn-block shadow-lg mt-4">Log in</button>
+                <div class="d-flex justify-content-center mt-2">
+                    <a href="/organizer/register">create account</a>
+                </div>
             </form>
 
 
