@@ -83,7 +83,7 @@
                 @php
                     $navs = [['name' => 'Dashboard', 'link' => route('admin.dashboard'), 'icon' => 'bi bi-grid-fill'], ['name' => 'Event Organizers', 'link' => route('admin.eo'), 'icon' => 'bi bi-hexagon-fill'], ['name' => 'Events', 'link' => route('admin.events'), 'icon' => 'bi bi-file-earmark-medical-fill']];
                     
-                    $navs_with_subs = [['name' => 'Categories', 'link' => route('admin.categories'), 'icon' => 'bi bi-file-earmark-medical-fill'], ['name' => 'Place Boundaries', 'link' => route('admin.boundaries'), 'icon' => 'bi bi-file-earmark-medical-fill']];
+                    $navs_with_subs = [['name' => 'Categories', 'link' => route('admin.categories'), 'icon' => 'bi bi-collection-fill'], ['name' => 'Place Boundaries', 'link' => route('admin.boundaries'), 'icon' => 'bi bi-map-fill']];
                 @endphp
                 <div class="sidebar-menu">
                     <ul class="menu">
