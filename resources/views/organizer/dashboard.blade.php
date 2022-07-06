@@ -79,19 +79,20 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <div>
-                            @if ($event->status->status == 'takedown' || $event->status->status == 'rejected')
-                                <span class="badge bg-danger">{{ $event->status->status }}</span>
-                            @endif
-                            @if ($event->status->status == 'waiting')
-                                <span class="badge bg-info">{{ $event->status->status }}</span>
-                            @endif
-                            @if ($event->status->status == 'verified')
-                                <span class="badge bg-success">{{ $event->status->status }}</span>
-                            @endif
+
+                            <span @class([
+                                'badge',
+                                'bg-secondary' => $event->status->status == 'waiting',
+                                'bg-warning' => $event->status->status == 'rejected',
+                                'bg-info' => $event->status->status == 'verified',
+                                'bg-success' => $event->status->status == 'done',
+                                'bg-danger' => $event->status->status == 'takedown',
+                            ])>{{ $event->status->status }}</span>
+
                         </div>
 
                         <div>
-                            @if ($event->status->status == 'verified' || $event->status->status == 'takedown')
+                            @if (in_array($event->status->status, ['verified', 'done', 'takedown']))
                                 <a href="/organizer/event/detail/{{ $event->id }}"
                                     class="btn btn-light-primary">Detail</a>
                             @else
