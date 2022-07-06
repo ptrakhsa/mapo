@@ -34,7 +34,9 @@
         }
 
         .ql-editor {
-            min-height: 200px;
+            min-height: 300px;
+            max-height: 450px;
+            overflow-y: scroll;
         }
 
         .circle-steper {
