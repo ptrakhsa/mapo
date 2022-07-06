@@ -89,15 +89,14 @@ class AdminEventController extends Controller
     {
         $last_submission = SubmittedEvent::where('event_id', $id)->orderBy('id', 'desc')->first();
         $in_waiting = $last_submission->status == 'waiting' ? true : false;
-        $has_rejected = $last_submission->status == 'rejected' ? true : false;
-        if ($in_waiting or $has_rejected) {
+        if ($in_waiting) {
             SubmittedEvent::create([
                 'event_id' => $id,
                 'status' => 'verified',
             ]);
             return redirect()->route('admin.dashboard');
         }
-        return redirect()->back()->withErrors(['message' => 'to accept, event must be in waiting or has rejected']);
+        return redirect()->back()->withErrors(['message' => 'to accept, event must be in waiting']);
     }
 
     public function markAsDoneEvent(Request $request, $id)
