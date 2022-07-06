@@ -64,7 +64,11 @@
             <div class="row">
                 <div class="content">
                     <span class="fa-fw select-all fas"></span>
-                    <span>{{ $event->start_date }}</span><br>
+                    <span>
+                        {{ date_format(date_create($event->start_date), 'H:i A, j F Y') }}
+                        - {{ date_format(date_create($event->end_date), 'H:i A, j F Y') }}
+                    </span>
+                    <br>
                     <span class="fa-fw select-all fas"></span>
                     <span>{{ $event->location }}</span>
                     <!-- <div class="mx-2" style="background-color: rgb(212, 217, 221); width: 2px; height: 30px;"></div> -->
