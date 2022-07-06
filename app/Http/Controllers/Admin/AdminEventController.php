@@ -35,6 +35,11 @@ class AdminEventController extends Controller
                 $current_status = 'takedown';
                 break;
 
+            case 'done':
+                $events = Event::with(['organizer', 'category', 'status'])->has('hasDone')->get();
+                $current_status = 'done';
+                break;
+
             default:
                 $events = Event::with(['organizer', 'category', 'status'])->has('status')->get();
                 $current_status = 'all';

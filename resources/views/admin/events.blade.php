@@ -38,6 +38,7 @@
                         onchange="changeEventStatus(this)">
                         <option {{ $current_status == 'all' ? 'selected' : '' }} value="all">All</option>
                         <option {{ $current_status == 'verified' ? 'selected' : '' }} value="verified">Verified</option>
+                        <option {{ $current_status == 'done' ? 'selected' : '' }} value="done">Done</option>
                         <option {{ $current_status == 'rejected' ? 'selected' : '' }} value="rejected">Rejected</option>
                         <option {{ $current_status == 'takedown' ? 'selected' : '' }} value="takedown">Takedown</option>
                     </select>

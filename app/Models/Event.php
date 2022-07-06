@@ -64,6 +64,11 @@ class Event extends Model
         return $this->hasOne(SubmittedEvent::class)->latestOfMany()->where('status', 'takedown');
     }
 
+    public function hasDone()
+    {
+        return $this->hasOne(SubmittedEvent::class)->latestOfMany()->where('status', 'done');
+    }
+
     public function inPopularPlaces()
     {
         return $this->belongsTo(PopularPlaces::class, 'popular_place_id');
