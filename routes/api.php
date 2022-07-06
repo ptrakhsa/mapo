@@ -28,25 +28,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 // for admin
-Route::get('/admin/eo/events/{id}', [ApiEventController::class, 'getEventsByOrganizer']);
+Route::get('/admin/organizer/events/{id}', [ApiAdminController::class, 'getEventsByOrganizer']);
 Route::get('/admin/place-boundaries', [ApiAdminController::class, 'placeBoundaries']);
 
 
 
 // for end user / guest
-Route::get('/locations', [ApiEventController::class, 'index']);
-Route::get('/location/{id}', [ApiEventController::class, 'eventDetail']);
 Route::get('/events', [ApiEventController::class, 'findEvents']);
 Route::get('/event/detail/id={id}', [ApiEventController::class, 'findEventDetail']);
 
 
 // for organizers
-Route::post('/event/validate', [ApiEventController::class, 'validateEvent']);
-Route::get('/organizer/event/{id}/submission-history', [ApiEventController::class, 'submissionHistory']);
+Route::post('/organizer/event/validate', [ApiOrganizerController::class, 'validateEvent']);
+Route::get('/organizer/event/{id}/submission-history', [ApiOrganizerController::class, 'submissionHistory']);
 Route::get('/organizer/event/{id}/detail', [ApiOrganizerController::class, 'getEventDetailById']);
-Route::post('/organizer/event/upload-content-image', [ApiEventController::class, 'uploadContentImage']);
+Route::post('/organizer/event/upload-content-image', [ApiOrganizerController::class, 'uploadContentImage']);
 
 // for general (all scope)
 Route::get('/categories', [ApiCategoryController::class, 'index']);
-Route::get('/popular-places/all', [ApiPopularPlaceController::class, 'index']);
-Route::get('/geojson/yogyakarta-province', [ApiEventController::class, 'yogyakartaGeoJSON']);
+Route::get('/popular-places', [ApiPopularPlaceController::class, 'index']);
+Route::get('/place-boundaries', [ApiEventController::class, 'placeBoundaries']);

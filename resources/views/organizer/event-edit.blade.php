@@ -495,7 +495,7 @@
                 },
 
                 async loadPopularPlaces() {
-                    fetch('/api/popular-places/all')
+                    fetch('/api/popular-places')
                         .then(r => r.json())
                         .then(d => {
                             this.popularPlaces = d;
@@ -521,7 +521,7 @@
                         method: 'POST',
                         body: formData,
                     }
-                    let response = await fetch('/api/event/validate', config)
+                    let response = await fetch('/api/organizer/event/validate', config)
 
                     try {
                         if (response.status >= 400 && response.status < 500) {
@@ -638,7 +638,7 @@
 
 
                 async loadJogjaBounds() {
-                    let d = await fetch('/api/geojson/yogyakarta-province').then(r => r.json())
+                    let d = await fetch('/api/place-boundaries').then(r => r.json())
                     let map = this.map
                     this.layer = L.geoJSON(d, {
                             pointToLayer: (geoJsonPoint, latlng) => L.marker(latlng),

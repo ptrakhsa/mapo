@@ -91,8 +91,8 @@ class OrganizerEventController extends Controller
 
         $event->location = $request->location;
 
-        $event->lat = $request->lat;
-        $event->lng = $request->lng;
+        // $event->lat = $request->lat;
+        // $event->lng = $request->lng;
 
         $event->position = DB::raw("ST_GeomFromText('POINT($request->lng $request->lat)',4326)");
 

@@ -66,7 +66,7 @@
                     listEl.classList.add('col-md-6');
                     detailEl.classList.add('col-md-6');
 
-                    fetch(`/api/admin/eo/events/${id}`)
+                    fetch(`/api/admin/organizer/events/${id}`)
                         .then(res => res.json())
                         .then(data => {
                             const detailTbody = document.getElementById('eo-detail-tbody')

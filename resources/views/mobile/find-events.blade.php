@@ -427,33 +427,6 @@
                     }
                 },
 
-                async loadJogjaBounds() {
-                    let d = await fetch('/api/geojson/yogyakarta-province').then(r => r.json())
-                    let map = this.map
-                    this.layer = L.geoJSON(d, {
-                            pointToLayer: (geoJsonPoint, latlng) => L.marker(latlng),
-                            onEachFeature: function onEachFeature(feature, layer) {
-                                layer.on({
-                                    click: (e) => {
-                                        map.fitBounds(e.target.getBounds())
-                                    }
-                                });
-                            },
-                            style: function polystyle(feature) {
-                                return {
-                                    fillColor: 'grey',
-                                    weight: 2,
-                                    opacity: 1,
-                                    color: 'grey',
-                                    dashArray: '3',
-                                    fillOpacity: 0.1
-                                };
-                            }
-
-                        })
-                        .addTo(this.map);
-
-                },
 
                 toggleCategory(id) {
                     this.filter.cat = id; // set filter vue data based clicked category btn
@@ -518,7 +491,7 @@
                 },
 
                 async loadPopularPlaces() {
-                    let response = await fetch('/api/popular-places/all').then(r => r.json());
+                    let response = await fetch('/api/popular-places').then(r => r.json());
                     let popularPlaces = Array.from(response);
                     this.popularPlaces = popularPlaces;
                 },
