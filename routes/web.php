@@ -36,7 +36,7 @@ Route::get('/', function () {
 
 Route::get('/mobile/find-events', function () {
     return view('mobile.find-events');
-});
+})->name('mobile.find-events');
 
 Route::get('/mobile/event/detail/id={id}', [MobileAppController::class, 'detail']);
 
