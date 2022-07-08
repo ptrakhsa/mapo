@@ -40,11 +40,38 @@
 
                     const detailEl = document.getElementById('eo-detail');
                     const listEl = document.getElementById('eo-list');
-                    const parseDataToView = (data) => `<tr>
+
+                    function parseDataToView(data) {
+
+                        function _getColorByStatus(status) {
+                            switch (status) {
+                                case "waiting":
+                                    return "bg-secondary";
+                                    break;
+
+                                case "rejected":
+                                    return "bg-warning";
+                                    break;
+
+                                case "verified":
+                                    return "bg-info";
+                                    break;
+
+                                case "done":
+                                    return "bg-success";
+                                    break;
+
+                                default:
+                                    return "bg-danger" // takedown
+                                    break;
+                            }
+                        }
+                        return `<tr>
                                 <td>${data.name}</td>
                                 <td>${data.description}</td>
-                                <td><span class="badge bg-light-primary">${data.status ? data.status : '-'}</span></td>
+                                <td><span class="badge ${_getColorByStatus(data.status)}">${data.status ? data.status : '-'}</span></td>
                             </tr>`
+                    }
 
 
                     detailEl.classList.remove('d-none');
