@@ -1,4 +1,4 @@
-@section('title', 'organizer reg')
+@section('title', 'Organizer Register')
 @extends('layouts.master')
 
 @section('content')

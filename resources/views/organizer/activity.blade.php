@@ -1,4 +1,4 @@
-@section('title', 'organizer dashboard')
+@section('title', 'Activity')
 @extends('layouts.master')
 
 @section('content')
