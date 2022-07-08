@@ -116,6 +116,10 @@
                             tableTitle.innerHTML = name
                             tableSubtitle.innerHTML = countEventByStatus(response)
 
+                            // set anchor link 
+                            const anchorLink = document.getElementById('eo-fullpage-anchor');
+                            anchorLink.href = `/admin/organizer/${id}/events?status=all`
+
                             if (response.length > 0) {
                                 const dataToView = response.map(parseDataToView).join('')
 
@@ -180,10 +184,17 @@
                                     <span id="eo-total-events"></span>
                                 </div>
 
-                                <div onclick="hideDetail()"
-                                    class="mx-4 my-4 d-flex justify-content-center align-items-center"
-                                    style="cursor:pointer;background-color:#f0f0f1;width:32px;height:32px;border-radius:50%;color:#25396f;">
-                                    x
+                                <div class="d-flex">
+                                    <a id="eo-fullpage-anchor" class="my-4 d-flex justify-content-center align-items-center"
+                                        style="cursor:pointer;background-color:#f0f0f1;width:32px;height:32px;border-radius:50%;color:#25396f;">
+                                        <span class="fa-fw select-all fas"></span>
+                                    </a>
+
+                                    <div onclick="hideDetail()"
+                                        class="mx-4 my-4 d-flex justify-content-center align-items-center"
+                                        style="cursor:pointer;background-color:#f0f0f1;width:32px;height:32px;border-radius:50%;color:#25396f;">
+                                        x
+                                    </div>
                                 </div>
                             </div>
                             <!-- Table with no outer spacing -->
