@@ -12,15 +12,6 @@
                     <h3>Events</h3>
                     <p class="text-subtitle text-muted">List of events group by verified and rejected</p>
                 </div>
-                <div class="col-12 col-md-6 order-md-2 order-first">
-                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Event Organizers</a></li>
-                            <li class="breadcrumb-item" aria-current="page">list</li>
-                            <li class="breadcrumb-item active" id="last-breadcrumb" aria-current="page"></li>
-                        </ol>
-                    </nav>
-                </div>
             </div>
         </div>
         {{--  --}}

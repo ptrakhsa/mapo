@@ -12,15 +12,6 @@
                     <h3>Event Organizers</h3>
                     <p class="text-subtitle text-muted">List of event organizers</p>
                 </div>
-                <div class="col-12 col-md-6 order-md-2 order-first">
-                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">Event Organizers</li>
-                            <li class="breadcrumb-item" aria-current="page">list</li>
-                            <li class="breadcrumb-item active" id="last-breadcrumb" aria-current="page"></li>
-                        </ol>
-                    </nav>
-                </div>
             </div>
         </div>
         {{--  --}}
@@ -40,15 +31,9 @@
                     listEl.classList.remove('col-md-6');
                     detailEl.classList.remove('col-md-6');
 
-                    // reset breadcrumb
-                    const breadCrumb = document.getElementById('last-breadcrumb');
-                    breadCrumb.innerHTML = ''
                 }
 
                 function getEODetail(id, name) {
-                    // set breadcrumb
-                    const breadCrumb = document.getElementById('last-breadcrumb');
-                    breadCrumb.innerHTML = name
 
 
                     // set table content 
