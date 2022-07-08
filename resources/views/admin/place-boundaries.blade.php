@@ -1,4 +1,4 @@
-@section('title', 'Event Organizers')
+@section('title', 'Place Boundaries')
 @extends('layouts.admin-panel')
 
 
