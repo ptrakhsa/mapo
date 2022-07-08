@@ -504,11 +504,11 @@
                         this.openPopupByEventId(property.id)
 
                         /** {id,name,description,content,location,photo,link,category_name,organizer_name,lng,lat,start_date,end_date,} */
-                        this.detail = await fetch(`/api/event/detail/id=${property.id}`)
-                            .then(r => r.json())
-                            .catch(() => alert('error when get detail'));
+                        // this.detail = await fetch(`/api/event/detail/id=${property.id}`)
+                        //     .then(r => r.json())
+                        //     .catch(() => alert('error when get detail'));
 
-                        this.showDetail = true;
+                        // this.showDetail = true;
 
                     } else {
                         alert('something wrong when get detail')
