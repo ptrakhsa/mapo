@@ -1,4 +1,4 @@
-@section('title', 'Event Mapper')
+@section('title', 'Event Detail')
 @extends('layouts.admin-panel')
 
 
