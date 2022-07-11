@@ -75,6 +75,7 @@ class ApiEventController extends Controller
             )
             ->groupBy("position")
             ->whereNull('events.deleted_at')
+            ->whereRaw("ST_DISTANCE_SPHERE(`position`,$user_location) <= (150*150)") // radius 150m * 150m
             ->whereRaw("(select status from submitted_events se where se.event_id = events.id order by id desc limit 1) = 'verified' "); // only show verified events
 
         // set keyword filter
