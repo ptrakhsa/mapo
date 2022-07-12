@@ -1,4 +1,4 @@
-@section('title', 'organizer dashboard')
+@section('title', 'Activity')
 @extends('layouts.master')
 
 @section('content')
@@ -19,8 +19,8 @@
 
 
         <div class="d-flex align-content-center">
-            <a class="btn" href="/organizer/dashboard">dashboard</a>
-            <a class="btn" href="/organizer/activity">activity</a>
+            <a class="btn" href="/organizer/dashboard">Dashboard</a>
+            <a class="btn" href="/organizer/activity">Activity</a>
             <form action="/organizer/logout" method="POST">
                 @csrf
                 <input type="submit" class="btn" value="Logout">
@@ -31,7 +31,7 @@
 
     {{-- content --}}
     <div class="container mt-4">
-        Your activity
+        Your activities
         <div class="d-flex justify-content-center row mt-4">
 
             @forelse ($activities as $activity)

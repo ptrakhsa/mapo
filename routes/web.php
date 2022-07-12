@@ -57,6 +57,7 @@ Route::prefix('admin')->group(function () {
 
         // admin manage organizer
         Route::get('/eo', [AdminOrganizerController::class, 'index'])->name('admin.eo');
+        Route::get('/organizer/{id}/events', [AdminOrganizerController::class, 'organizerEvents'])->name('admin.organizer-events');
 
         // admin manage event routes
         Route::get('/events', [AdminEventController::class, 'index'])->name('admin.events');

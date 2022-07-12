@@ -1,4 +1,4 @@
-@section('title', 'Event Organizers')
+@section('title', 'Categories')
 @extends('layouts.admin-panel')
 
 @section('content')

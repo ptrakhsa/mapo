@@ -1,4 +1,4 @@
-@section('title', 'Event Mapper')
+@section('title', 'Event Detail')
 @extends('layouts.admin-panel')
 
 
@@ -25,8 +25,6 @@
                         {!! $event->content !!}
                     </div>
                     <small>
-                        <span class="fa-fw select-all fas"></span>
-
                         <span class="fa-fw select-all fas"></span>
                         <span>{{ date_format(date_create($event->start_date), 'H:i A, j F Y') }} - {{ date_format(date_create($event->end_date), 'H:i A, j F Y') }}</span>
                     </small>

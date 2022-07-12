@@ -18,7 +18,6 @@
         padding-left: 10px;
         padding-right: 10px;
         border-bottom-right-radius: 10px;
-
     }
 </style>
 @endsection
@@ -31,7 +30,7 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Dashboard</h3>
-                <!-- <p class="text-subtitle text-muted">A bunch of unapproved incoming events</p> -->
+                <p class="text-subtitle text-muted">Incoming and upcoming events</p>
                 <div class="mb-5 d-flex">
 
                     <a href="/admin/dashboard?status=incoming" class="btn btn-sm rounded-pill {{ $current_status == 'incoming' ? 'btn-primary' : 'btn-outline-primary' }}">Incoming</a>
@@ -54,14 +53,6 @@
                         year</a>
                     @endif
                 </div>
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">unapproved</li>
-                    </ol>
-                </nav>
             </div>
         </div>
     </div>
@@ -110,9 +101,9 @@
                             More</a>
                     </div>
                 </div>
+
             </div>
             @empty
-            <hr>
             <div>Waiting for something new ..</div>
             @endforelse
         </div>
@@ -132,7 +123,6 @@
             backgroundColor: '#4F6467',
         }).showToast();
     }
-
     // note render 'false' is equal with false in js 
     let message = {
         {
@@ -143,4 +133,5 @@
         messageNotifier(message)
     }
 </script>
+
 @endsection

@@ -12,15 +12,6 @@
                     <h3>Event Organizers</h3>
                     <p class="text-subtitle text-muted">List of event organizers</p>
                 </div>
-                <div class="col-12 col-md-6 order-md-2 order-first">
-                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">Event Organizers</li>
-                            <li class="breadcrumb-item" aria-current="page">list</li>
-                            <li class="breadcrumb-item active" id="last-breadcrumb" aria-current="page"></li>
-                        </ol>
-                    </nav>
-                </div>
             </div>
         </div>
         {{--  --}}
@@ -40,26 +31,73 @@
                     listEl.classList.remove('col-md-6');
                     detailEl.classList.remove('col-md-6');
 
-                    // reset breadcrumb
-                    const breadCrumb = document.getElementById('last-breadcrumb');
-                    breadCrumb.innerHTML = ''
                 }
 
                 function getEODetail(id, name) {
-                    // set breadcrumb
-                    const breadCrumb = document.getElementById('last-breadcrumb');
-                    breadCrumb.innerHTML = name
 
 
                     // set table content 
 
                     const detailEl = document.getElementById('eo-detail');
                     const listEl = document.getElementById('eo-list');
-                    const parseDataToView = (data) => `<tr>
+
+                    function _getColorByStatus(status) {
+                        switch (status) {
+                            case "waiting":
+                                return "bg-secondary";
+                                break;
+
+                            case "rejected":
+                                return "bg-warning";
+                                break;
+
+                            case "verified":
+                                return "bg-info";
+                                break;
+
+                            case "done":
+                                return "bg-success";
+                                break;
+
+                            default:
+                                return "bg-danger" // takedown
+                                break;
+                        }
+                    }
+
+                    function parseDataToView(data) {
+                        return `<tr>
                                 <td>${data.name}</td>
                                 <td>${data.description}</td>
-                                <td><span class="badge bg-light-primary">${data.status ? data.status : '-'}</span></td>
+                                <td><span class="badge ${_getColorByStatus(data.status)}">${data.status ? data.status : '-'}</span></td>
                             </tr>`
+                    }
+
+                    function countEventByStatus(events) {
+                        // event input is [{id,name,description,status}]
+
+                        if (events.length == 0) {
+                            return `0 events`
+                        } else {
+                            const groupBy = function(xs, key) {
+                                return xs.reduce(function(rv, x) {
+                                    (rv[x[key]] = rv[x[key]] || []).push(x);
+                                    return rv;
+                                }, {});
+                            };
+                            // group by event status, so event array become object like this {verifed:[],done:[]}
+                            const _groupByStatus = groupBy(events, 'status');
+
+                            // make object to be a concated string 
+                            let _string = "";
+                            for (let key in _groupByStatus) {
+                                _string +=
+                                    `<span class="badge ${_getColorByStatus(key)} mx-1">${key}: ${_groupByStatus[key].length}</span>`
+                            }
+
+                            return `${events.length} events ${_string}`
+                        }
+                    }
 
 
                     detailEl.classList.remove('d-none');
@@ -76,7 +114,11 @@
                             const tableTitle = document.getElementById('eo-name')
                             const tableSubtitle = document.getElementById('eo-total-events')
                             tableTitle.innerHTML = name
-                            tableSubtitle.innerHTML = `${response.length} events`
+                            tableSubtitle.innerHTML = countEventByStatus(response)
+
+                            // set anchor link 
+                            const anchorLink = document.getElementById('eo-fullpage-anchor');
+                            anchorLink.href = `/admin/organizer/${id}/events?status=all`
 
                             if (response.length > 0) {
                                 const dataToView = response.map(parseDataToView).join('')
@@ -136,20 +178,28 @@
 
                         <div class="card-content">
 
-                            <div onclick="hideDetail()" class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between">
                                 <div class="card-header">
                                     <h4 id="eo-name"></h4>
                                     <span id="eo-total-events"></span>
                                 </div>
 
-                                <div class="mx-4 my-4 d-flex justify-content-center align-items-center"
-                                    style="cursor:pointer;background-color:#f0f0f1;width:32px;height:32px;border-radius:50%;color:#25396f;">
-                                    x
+                                <div class="d-flex">
+                                    <a id="eo-fullpage-anchor" class="my-4 d-flex justify-content-center align-items-center"
+                                        style="cursor:pointer;background-color:#f0f0f1;width:32px;height:32px;border-radius:50%;color:#25396f;">
+                                        <span class="fa-fw select-all fas"></span>
+                                    </a>
+
+                                    <div onclick="hideDetail()"
+                                        class="mx-4 my-4 d-flex justify-content-center align-items-center"
+                                        style="cursor:pointer;background-color:#f0f0f1;width:32px;height:32px;border-radius:50%;color:#25396f;">
+                                        x
+                                    </div>
                                 </div>
                             </div>
                             <!-- Table with no outer spacing -->
                             <div class="table-responsive" style="transition: all ease-in-out 0.3s;">
-                                <table class="table mb-0 table-lg">
+                                <table class="table mb-0 table-lg table-striped">
                                     <thead>
                                         <tr>
                                             <th>Name</th>

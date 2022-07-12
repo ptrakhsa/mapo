@@ -15,7 +15,10 @@ class ApiAdminController extends Controller
         $events = DB::table('events')
             ->addSelect('id', 'name', 'description')
             ->selectRaw('(select status from submitted_events se where se.event_id = events.id order by id desc limit 1) as status')
-            ->where('organizer_id', $request->id)
+            ->where([
+                ['organizer_id', $request->id],
+                ['deleted_at', null]
+            ])
             ->get();
 
         return response()->json($events);

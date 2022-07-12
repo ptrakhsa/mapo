@@ -1,4 +1,4 @@
-@section('title', 'organizer dashboard')
+@section('title', 'Create an Event')
 @extends('layouts.master')
 
 

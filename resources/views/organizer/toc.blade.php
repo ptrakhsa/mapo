@@ -1,4 +1,4 @@
-@section('title', 'organizer dashboard')
+@section('title', 'Terms and Conditions')
 @extends('layouts.master')
 
 @section('content')
