@@ -22,6 +22,8 @@
 
     <link rel="stylesheet" href="/assets/css/animation.css">
     <script src="/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <link rel="shortcut icon" href="/assets/images/logo/logo.png">
     {{-- end assets --}}
 
     {{-- basic styles --}}
@@ -57,7 +59,7 @@
 
     {{-- head content --}}
     @yield('head')
-    {{--  --}}
+    {{-- --}}
 
 </head>
 
@@ -69,23 +71,22 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="toggler">
-                            <a href="#" class="sidebar-hide d-xl-none d-block"><i
-                                    class="bi bi-x bi-middle"></i></a>
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                         </div>
                     </div>
                 </div>
 
                 {{-- SIDEBAR --}}
-                {{--  --}}
+                {{-- --}}
 
                 <div class="sidebar-menu">
                     <ul class="menu">
                         @foreach ($navs as $nav)
-                            <li class="sidebar-item  ">
-                                <a href="/docs?page={{ $nav }}" class='sidebar-link'>
-                                    <span>{{ $nav }}</span>
-                                </a>
-                            </li>
+                        <li class="sidebar-item  ">
+                            <a href="/docs?page={{ $nav }}" class='sidebar-link'>
+                                <span>{{ $nav }}</span>
+                            </a>
+                        </li>
                         @endforeach
                     </ul>
                 </div>

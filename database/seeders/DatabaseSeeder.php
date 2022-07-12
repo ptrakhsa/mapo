@@ -50,19 +50,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\PopularPlaces::create([
-            'name' => 'Gedung Societet',
-            'lat' => -7.799945669865703,
-            'lng' => 110.3678367539636
-        ]);
-
-        \App\Models\PopularPlaces::create([
-            'name' => 'Taman Budaya DIY',
-            'lat' => -7.799900572407222,
-            'lng' => 110.36764329992378
-        ]);
-
-
-        \App\Models\PopularPlaces::create([
             'name' => 'Gedung Kesenian Kabupaten Sleman',
             'lat' => -7.719839947081696,
             'lng' =>  110.36009393309091
@@ -85,6 +72,18 @@ class DatabaseSeeder extends Seeder
             'name' => 'Jogja City Mall',
             'lat' => -7.7523936823136435,
             'lng' => 110.36093421880784
+        ]);
+
+        \App\Models\PopularPlaces::create([
+            'name' => 'Hutan Pinus Mangunan Dlingo',
+            'lat' => -7.9265392887824255,
+            'lng' => 110.43206106999061
+        ]);
+
+        \App\Models\PopularPlaces::create([
+            'name' => 'Merapi Park Jogjakarta',
+            'lat' => -7.620255028846066,
+            'lng' =>  110.4217645241658
         ]);
 
         // create event

@@ -70,6 +70,7 @@
     </style>
 
     @yield('head')
+
 </head>
 
 <body>
