@@ -77,7 +77,7 @@
                                 <div class="date-label" style="border-radius: 5px; margin: 10px 0px 0px 10px ;">
                                     {{ \Carbon\Carbon::parse($event->start_date)->diffForHumans() }}
                                 </div>
-                                <img style="max-height: 400px;object-fit: contain; border-radius:10px 10px 0px 0px ;"
+                                <img style="max-height: 400px;object-fit: contain; border-radius:10px 10px 0px 0px; linear-gradient(center top , #FFFFFF, #DDDDDD);"
                                     class="img-fluid w-100" src="{{ $event->photo }}" alt="Card image cap">
                                 <div class="card-body">
                                     <h4 class="card-title">{{ $event->name }}</h4>
