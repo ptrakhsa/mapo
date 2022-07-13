@@ -16,7 +16,22 @@
         INSERT INTO events(`id`,`name`,`description`,`content`,`start_date`,`end_date`,`location`,`position`,`photo`,`link`,`organizer_id`,`category_id`,`popular_place_id`,`created_at`,`updated_at`,`deleted_at`) VALUES ('','event candi abang','candi abang yayayay','asoyy','2022-07-12 16:03:53','2022-07-15 16:03:53', 'candiabang',ST_GeomFromText('POINT(110.49139855375093 -7.7511342341190215)'),'Photo Gw','/assets/images/samples/jump.jpg',1,1,7,'','','');
 </pre>
     <h4>Reject event</h4>
+    <pre>
+        UPDATE `submitted_events` 
+        SET `status` = 'rejected',
+        `reason` = 'fix your location!',
+        `deleted_at` = NULL 
+        WHERE 
+        `submitted_events`.`event_id` = 1;
+    </pre>
     <h4>Verify event</h4>
+    <pre>
+        UPDATE `submitted_events` 
+        SET `status` = 'verified',
+        `reason` = '',
+        `deleted_at` = NULL WHERE 
+        `submitted_events`.`event_id` = 30;
+    </pre>
     <h4>Takedown event</h4>
     <h4>Mark event as done</h4>
 @endsection
