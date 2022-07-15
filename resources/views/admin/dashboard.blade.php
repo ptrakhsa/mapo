@@ -87,8 +87,14 @@
                                     </p>
                                     <p class="card-text">
                                         <small>
+                                            <span class="fa-fw select-all fas"></span>
+                                            {{ date_format(date_create($event->start_date), 'l, j F Y') }}
+                                        </small>
+                                        <br>
+                                        <small>
                                             <span class="fa-fw select-all fas"></span>
-                                            {{ date_format(date_create($event->start_date), 'H:i A, j F Y') }}
+                                            {{ date_format(date_create($event->start_date), 'H:i A') }} -
+                                            {{ date_format(date_create($event->end_date), 'H:i A') }}
                                         </small>
                                         <br>
                                         <small>

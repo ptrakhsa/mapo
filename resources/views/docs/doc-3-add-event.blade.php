@@ -34,4 +34,8 @@
     </pre>
     <h4>Takedown event</h4>
     <h4>Mark event as done</h4>
+    <h4>Sort event by start_date</h4>
+    <pre>
+            SELECT * FROM `events` ORDER BY `events`.`start_date` DESC
+        </pre>
 @endsection
