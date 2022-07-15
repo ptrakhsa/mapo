@@ -17,11 +17,8 @@
         {{--  --}}
         {{-- END PAGE DESCRIPTION --}}
 
-
-
         {{-- DASHBOARD EVENT LIST --}}
         <section id="content-types">
-
             <script>
                 function hideDetail() {
                     const detailEl = document.getElementById('eo-detail');
@@ -77,7 +74,7 @@
                         // event input is [{id,name,description,status}]
 
                         if (events.length == 0) {
-                            return `0 events`
+                            return ` 0 events`
                         } else {
                             const groupBy = function(xs, key) {
                                 return xs.reduce(function(rv, x) {
@@ -95,7 +92,7 @@
                                     `<span class="badge ${_getColorByStatus(key)} mx-1">${key}: ${_groupByStatus[key].length}</span>`
                             }
 
-                            return `${events.length} events ${_string}`
+                            return `Has ${events.length} events <br>${_string}`
                         }
                     }
 

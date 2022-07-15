@@ -59,11 +59,11 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>No.</th>
                                         <th>Name</th>
                                         <th>Pendidikan</th>
                                         <th>Kebudayaan</th>
-                                        <th>Total events</th>
+                                        <th>Total </th>
                                     </tr>
                                 </thead>
                                 <tbody>
