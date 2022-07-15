@@ -1,6 +1,8 @@
 @extends('layouts.docs-panel')
 @section('content')
     <h3>Validate event</h3>
+    lokasi controller:
+    app\Http\Controllers\Api\ApiOrganizerController.php @validateEvent
     <pre>set @start = '2022-06-30 06:45:46', @end = '2022-07-03 06:45:46', @pos = GEOMETRYFROMTEXT('POINT(110.36588792192126 -7.791903826254844)', 4326);
 
     SELECT events.id, ST_DISTANCE_SPHERE(events.position, @pos, 4326)
@@ -12,10 +14,14 @@
     OR (@start between events.start_date and events.end_date)
 );</pre>
     <h3>Add event</h3>
+    lokasi:
+    app\Http\Controllers\Organizer\OrganizerEventController.php @store
     <pre>
         INSERT INTO events(`id`,`name`,`description`,`content`,`start_date`,`end_date`,`location`,`position`,`photo`,`link`,`organizer_id`,`category_id`,`popular_place_id`,`created_at`,`updated_at`,`deleted_at`) VALUES ('','event candi abang','candi abang yayayay','asoyy','2022-07-12 16:03:53','2022-07-15 16:03:53', 'candiabang',ST_GeomFromText('POINT(110.49139855375093 -7.7511342341190215)'),'Photo Gw','/assets/images/samples/jump.jpg',1,1,7,'','','');
 </pre>
     <h4>Reject event</h4>
+    lokasi:
+    app\Http\Controllers\Admin\AdminEventController.php @rejectedEvent
     <pre>
         UPDATE `submitted_events` 
         SET `status` = 'rejected',

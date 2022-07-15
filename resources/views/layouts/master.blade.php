@@ -15,18 +15,19 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/logo/logo.png" type="image/x-icon">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
     <link rel="stylesheet" href="/assets/vendors/fontawesome/all.min.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <script src="/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
 
-    <link rel="shortcut icon" href="/assets/images/logo/logo.png">
     {{-- end assets --}}
 
     {{-- toastify --}}
     <script src="/assets/vendors/toastify/toastify.js"></script>
     <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
+
     {{-- end toastify --}}
 
     {{-- basic styles --}}

@@ -38,8 +38,9 @@ class AdminDashboardController extends Controller
                 break;
 
             default:
-                $current_submitted_events = Event::with(['organizer', 'category', 'status'])->has('inWaiting')->get();
+                $current_submitted_events = Event::with(['organizer', 'category', 'status'])->has('inWaiting')->get(); //query select ['organizer', 'category', 'status']
                 $current_status = 'incoming';
+
                 break;
         }
 

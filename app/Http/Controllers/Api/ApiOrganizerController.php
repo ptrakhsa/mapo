@@ -56,7 +56,7 @@ class ApiOrganizerController extends Controller
         $end_date = Carbon::parse($request->end_date);
         $moreThanOneWeek = $start_date->diffInDays($end_date) > 6;
         if ($moreThanOneWeek) {
-            array_push($errors, ['start_date' => 'event can not more than one week']);
+            array_push($errors, ['start_date' => 'event can`t more than one week']);
             return response()->json($errors, 422);
         }
 
@@ -67,7 +67,7 @@ class ApiOrganizerController extends Controller
             $lat = $request->lat;
             $lng = $request->lng;
             $event_as_point_text = "POINT($lng $lat)";
-            // kene2
+            // 
             $place_boundaries =
                 collect([
                     "type" => "FeatureCollection",
