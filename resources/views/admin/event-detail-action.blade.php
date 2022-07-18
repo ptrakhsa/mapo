@@ -25,13 +25,20 @@
                             {{-- time --}}
                             {{-- start & end date --}}
                             <small>
-                                <span class="fa-fw select-all fas"></span>
-                                {{ date_format(date_create($event->start_date), 'H:i A, j F Y') }}
-                                - {{ date_format(date_create($event->end_date), 'H:i A, j F Y') }}
+                                <span class="fa-fw select-all fas"></span>
+                                {{ date_format(date_create($event->start_date), 'j F Y') }}
+                                - {{ date_format(date_create($event->end_date), 'j F Y') }}
                             </small>
                             <br>
                             <small>
-                                <span class="fa-fw select-all fas"></span>
+                                <span class="fa-fw select-all fas"></span>
+                                {{ date_format(date_create($event->start_date), 'H:i A') }}
+                                - {{ date_format(date_create($event->end_date), 'H:i A') }}
+                            </small>
+                            <br>
+
+                            <small>
+                                <span class="fa-fw select-all fas"></span>
                                 {{ $event->location }}
                             </small>
                             <br>
@@ -43,7 +50,7 @@
                     </div>
 
                     <div class="card-footer d-flex justify-content-between">
-                        <span>{{ $event->organizer->name }}</span>
+                        <span>Held by <h4> {{ $event->organizer->name }}</h4></span>
                         {{-- footer if event in waiting --}}
                         @if (in_array($event->status->status, ['waiting', 'rejected']))
                             <div>

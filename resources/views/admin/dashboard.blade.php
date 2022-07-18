@@ -57,9 +57,13 @@
                                 class="{{ $current_date == 'year' ? 'btn-success' : 'btn-outline-success' }} btn btn-sm rounded-pill">This
                                 year</a>
                         @endif
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
         {{--  --}}
         {{-- END PAGE DESCRIPTION --}}
@@ -116,6 +120,7 @@
 
                     </div>
                 @empty
+                    <hr>
                     <div>Waiting for something new ..</div>
                 @endforelse
             </div>
