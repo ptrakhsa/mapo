@@ -1,4 +1,4 @@
-@section('title', 'Event Mapper')
+@section('title', 'Detail')
 @extends('layouts.master')
 
 
@@ -43,14 +43,14 @@
             width: 100%;
             height: 70px;
             background-color: white;
+            display: flex;
         }
     </style>
 
     <div class="box">
 
         <i onclick="history.back()" class="fw fa fa-thin fa-angle-left fa-2x mx-3 my-3 "></i>
-
-
+        <h4 style="color: grey; margin-top:20px">Back</h4>
     </div>
     <div class=" bg-white">
 
@@ -58,15 +58,21 @@
 
         <div class="card px-4 py-0 mx-3 my-0">
             <h2>{{ $event->name }}</h2>
-            <h6>Created by
+            <h6>held by
                 <span class="eo"> {{ $event->organizer_name }}</span>
             </h6>
             <div class="row">
                 <div class="content">
                     <span class="fa-fw select-all fas"></span>
                     <span>
-                        {{ date_format(date_create($event->start_date), 'H:i A, j F Y') }}
-                        - {{ date_format(date_create($event->end_date), 'H:i A, j F Y') }}
+                        {{ date_format(date_create($event->start_date), 'H:i A') }}
+                        - {{ date_format(date_create($event->end_date), 'H:i A') }}
+                    </span>
+                    <br>
+                    <span class="fa-fw select-all fas"></span>
+                    <span>
+                        {{ date_format(date_create($event->start_date), ' j F Y') }}
+                        - {{ date_format(date_create($event->end_date), ' j F Y') }}
                     </span>
                     <br>
                     <span class="fa-fw select-all fas"></span>
