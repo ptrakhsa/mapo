@@ -120,3 +120,7 @@ Route::prefix('organizer')->group(function () {
 
 
 Route::get('/docs', [DocController::class, 'index']);
+
+Route::get('/putri', function () {
+    return 'puutri rewel';
+});
