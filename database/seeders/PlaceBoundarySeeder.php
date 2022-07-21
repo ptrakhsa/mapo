@@ -32,23 +32,23 @@ class PlaceBoundarySeeder extends Seeder
         $data = [
             [
                 "name" => "Sleman",
-                "polygon_area" => DB::raw("ST_GEOMFROMGEOJSON('$sleman_geojson')"),
+                "polygon_area" => DB::raw("st_geomfromtext(st_astext(ST_GeomFromGeoJSON('$sleman_geojson')),4326)"),
             ],
             [
                 "name" => "Kota Yogyakarta",
-                "polygon_area" => DB::raw("ST_GEOMFROMGEOJSON('$jogja_kota_geojson')"),
+                "polygon_area" => DB::raw("st_geomfromtext(st_astext(ST_GeomFromGeoJSON('$jogja_kota_geojson')),4326)"),
             ],
             [
                 "name" => "Gunung Kidul",
-                "polygon_area" => DB::raw("ST_GEOMFROMGEOJSON('$gunung_kidul_geojson')"),
+                "polygon_area" => DB::raw("st_geomfromtext(st_astext(ST_GeomFromGeoJSON('$gunung_kidul_geojson')),4326)"),
             ],
             [
                 "name" => "Kulon Progo",
-                "polygon_area" => DB::raw("ST_GEOMFROMGEOJSON('$kulon_progo_geojson')"),
+                "polygon_area" => DB::raw("st_geomfromtext(st_astext(ST_GeomFromGeoJSON('$kulon_progo_geojson')),4326)"),
             ],
             [
                 "name" => "Bantul",
-                "polygon_area" => DB::raw("ST_GEOMFROMGEOJSON('$bantul_geojson')"),
+                "polygon_area" => DB::raw("st_geomfromtext(st_astext(ST_GeomFromGeoJSON('$bantul_geojson')),4326)"),
             ],
         ];
         DB::table('place_boundaries')->insert($data);

@@ -22,7 +22,6 @@ class AdminOrganizerController extends Controller
             $events_by_status = collect($organizer->events)->all();
         }
 
-
         return view('admin.organizer-with-events', compact('organizer', 'event_statuses', 'recent_status_query', 'events_by_status'));
     }
 
