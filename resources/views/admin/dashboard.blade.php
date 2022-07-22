@@ -1,4 +1,4 @@
-@section('title', 'Dashobard')
+@section('title', 'Dashboard')
 @extends('layouts.admin-panel')
 @section('head')
     <style>
@@ -30,13 +30,13 @@
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3>Dashboard</h3>
-                    <p class="text-subtitle text-muted">Incoming and upcoming events</p>
+                    <p class="text-subtitle text-muted">Incoming and On Going events</p>
                     <div class="mb-5 d-flex">
 
                         <a href="/admin/dashboard?status=incoming"
                             class="btn btn-sm rounded-pill {{ $current_status == 'incoming' ? 'btn-primary' : 'btn-outline-primary' }}">Incoming</a>
                         <a href="/admin/dashboard?status=upcoming"
-                            class="mx-1 btn btn-sm rounded-pill {{ $current_status == 'upcoming' ? 'btn-primary' : 'btn-outline-primary' }}">Upcoming</a>
+                            class="mx-1 btn btn-sm rounded-pill {{ $current_status == 'upcoming' ? 'btn-primary' : 'btn-outline-primary' }}">Ongoing</a>
 
 
                         {{-- upcoming options --}}
